@@ -66,7 +66,7 @@ int entryExists(entryType entries[], int countEntry, Str20 language, Str20 trans
     {
       foundLang = strcmp(entries[i].pair[j].lang, language);
       foundTrans = strcmp(entries[i].pair[j].trans, translate);
-      if (!foundLang && foundTrans) // BRUTE FIRE FORCE VIA LINEAR SEARCH
+      if (!foundLang && !foundTrans) // BRUTE FIRE FORCE VIA LINEAR SEARCH
       {
         matchedIndexes[matchCount++] = i; // Store the index of the entry that contains the lang-trans pair
       }
