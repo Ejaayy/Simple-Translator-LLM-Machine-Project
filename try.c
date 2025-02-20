@@ -16,8 +16,8 @@ typedef struct translationPairTag
 
 typedef struct entryTag
 { // holds each word
-  translationPairType pairs[MAX_PAIRS];
-  int count; // how many translation pair there is in an entry
+  translationPairType pair[MAX_PAIRS];
+  int pairCount; // how many translation pair there is in an entry
 } entryType;
 
 /*
@@ -41,29 +41,38 @@ typedef struct entryTag
 
 // Functions
 
-void showEntries(entryType entries[], int entryIndex)
+void showEntries(entryType entries[], int matchedIndexes[], int matchCount)
 {
-  int i;
-  for (i = 0; i < entries[entryIndex].count; i++)
+  int i, j;
+  for (i = 0; i < matchCount; i++)
   {
-    printf("Langauge:%s\tTranslation:%s\n", entries[entryIndex].pairs[i].lang, entries[entryIndex].pairs[i].trans);
+    entryType *entry = &entries[matchedIndexes[i]];
+    printf("Entry %d:\n", matchedIndexes[i]);
+
+    for (j = 0; j < entry->pairCount; j++)
+    {
+      printf("Langauge:%s\tTranslation:%s\n", entry->pair[j].lang, entry->pair[j].trans);
+    }
   }
 }
 
-int entryExists(entryType entries[], int countEntry, Str20 language, Str20 translate)
+int entryExists(entryType entries[], int countEntry, Str20 language, Str20 translate, int matchedIndexes[])
 {
-  int existFlag = -1;
+  int matchCount = 0;
+  int foundLang = 0, foundTrans;
   for (int i = 0; i < countEntry; i++) // checks index for each entry
   {
-    for (int j = 0; j < entries[i].count; j++) // Checks each pair of translation for that entry
+    for (int j = 0; j < entries[i].pairCount; j++) // Checks each pair of translation for that entry
     {
-      if (strcmp(entries[i].pairs[j].lang, language) == 0 && strcmp(entries[i].pairs[j].trans, translate) == 0) // BRUTE FIRE FORCE VIA LINEAR SEARCH
+      foundLang = strcmp(entries[i].pair[j].lang, language);
+      foundTrans = strcmp(entries[i].pair[j].trans, translate);
+      if (!foundLang && foundTrans) // BRUTE FIRE FORCE VIA LINEAR SEARCH
       {
-        existFlag = i; // Found existing entry
+        matchedIndexes[matchCount++] = i; // Store the index of the entry that contains the lang-trans pair
       }
     }
   }
-  return existFlag; // No match found
+  return matchCount; // No match found
 }
 
 /*
@@ -86,7 +95,12 @@ int entryExists(entryType entries[], int countEntry, Str20 language, Str20 trans
 int addEntry(entryType entries[], int *countEntry)
 {
   int entryFlag = 0;
+  int matchedIndexes[MAX_ENTRY] = {0};
+  int matchCount = 0;
+  Str20 language, translate; // temporary sting to store the input
 
+  // Starting from this line to line 131, it should be inside a while loop wherein the 
+  // user will be asked if they still want to add another translation pair or not
   if (*countEntry >= MAX_ENTRY)
   { // check if max entry concept count has been reached
     printf("Cannot add more entries. Dictionary is full!\n");
@@ -94,36 +108,34 @@ int addEntry(entryType entries[], int *countEntry)
   }
   else
   {
-
-    Str20 language, translate; // temporary sting to store the input
-
     printf("Enter language: ");
     scanf("%s", language);
     printf("Enter translation: ");
     scanf("%s", translate);
 
     // Check if the language-translation pair already exists
-    int existingIndex = entryExists(entries, *countEntry, language, translate);
+    matchCount = entryExists(entries, countEntry, language, translate, matchedIndexes);
 
-    if (existingIndex != -1)
+    if (matchCount > 0)
     {
       printf("A word in this language already exists!\n");
-      showEntries(entries, existingIndex);
+      showEntries(entries, matchedIndexes, matchCount);
       entryFlag = 0; // word exists
     }
     else
     {
       // Make a new entry
-      entryType *entry = &entries[*countEntry]; //make a pointer directly to the correct Index we are adding the new bitchass word and language
-      
-      strcpy(entry->pairs[0].lang, language);
-      strcpy(entry->pairs[0].trans, translate);
-      entry->count = 1;
+      entryType *entry = &entries[*countEntry]; // make a pointer directly to the correct Index we are adding the new bitchass word and language
 
-      (*countEntry)++; // Increase total entries count
-      printf("New entry added successfully!\n");
-      entryFlag = 1; // success
+      strcpy(entry->pair[0 /*gawin mo tong i*/].lang, language);
+      strcpy(entry->pair[0  /*gawin mo tong i*/].trans, translate);
+      entry->pairCount = 1;
+      /*lagay ka dito increment of i*/
     }
+
+    (*countEntry)++; // Increase total entries count
+    printf("New entry added successfully!\n");
+    entryFlag = 1; // success
   }
 
   return entryFlag;
@@ -163,16 +175,78 @@ int main()
   int countEntry = 0;
 
   // Initialize test data
-  strcpy(entry[0].pairs[0].lang, "English");
-  strcpy(entry[0].pairs[0].trans, "love");
-  strcpy(entry[0].pairs[1].lang, "Tagalog");
-  strcpy(entry[0].pairs[1].trans, "mahal");
-  strcpy(entry[0].pairs[2].lang, "Spanish");
-  strcpy(entry[0].pairs[2].trans, "amor");
-  strcpy(entry[0].pairs[3].lang, "English");
-  strcpy(entry[0].pairs[3].trans, "hate");
-  entry[0].count = 4;
-  countEntry = 1;
+  // Entry 0: Translations related to "love" and "hate"
+  strcpy(entry[0].pair[0].lang, "English");
+  strcpy(entry[0].pair[0].trans, "love");
+  strcpy(entry[0].pair[1].lang, "Tagalog");
+  strcpy(entry[0].pair[1].trans, "mahal");
+  strcpy(entry[0].pair[2].lang, "Spanish");
+  strcpy(entry[0].pair[2].trans, "amor");
+  strcpy(entry[0].pair[3].lang, "English");
+  strcpy(entry[0].pair[3].trans, "hate");
+  entry[0].pairCount = 4;
+  /*
+  Alternative for manually computing for the pairCount 
+  sizeof(entry[0].pairs) / sizeof(entry[0].pairs[0]);
+  printf("Total pairs in entry[0]: %d\n", pairCount);
+  */
+ 
+  // Entry 1: Translations for "happy"
+  strcpy(entry[1].pair[0].lang, "English");
+  strcpy(entry[1].pair[0].trans, "happy");
+  strcpy(entry[1].pair[1].lang, "Tagalog");
+  strcpy(entry[1].pair[1].trans, "masaya");
+  strcpy(entry[1].pair[2].lang, "Spanish");
+  strcpy(entry[1].pair[2].trans, "feliz");
+  strcpy(entry[1].pair[3].lang, "French");
+  strcpy(entry[1].pair[3].trans, "heureux");
+  entry[1].pairCount = 4;
+
+  // Entry 2: Translations for "beautiful"
+  strcpy(entry[2].pair[0].lang, "English");
+  strcpy(entry[2].pair[0].trans, "beautiful");
+  strcpy(entry[2].pair[1].lang, "Tagalog");
+  strcpy(entry[2].pair[1].trans, "maganda");
+  strcpy(entry[2].pair[2].lang, "Spanish");
+  strcpy(entry[2].pair[2].trans, "hermosa");
+  strcpy(entry[2].pair[3].lang, "Italian");
+  strcpy(entry[2].pair[3].trans, "bella");
+  entry[2].pairCount = 4;
+
+  // Entry 3: Translations for "strong"
+  strcpy(entry[3].pair[0].lang, "English");
+  strcpy(entry[3].pair[0].trans, "strong");
+  strcpy(entry[3].pair[1].lang, "Tagalog");
+  strcpy(entry[3].pair[1].trans, "malakas");
+  strcpy(entry[3].pair[2].lang, "Japanese");
+  strcpy(entry[3].pair[2].trans, "tsuyoi");
+  strcpy(entry[3].pair[3].lang, "German");
+  strcpy(entry[3].pair[3].trans, "stark");
+  entry[3].pairCount = 4;
+
+  // Entry 4: Translations for "fast"
+  strcpy(entry[4].pair[0].lang, "English");
+  strcpy(entry[4].pair[0].trans, "fast");
+  strcpy(entry[4].pair[1].lang, "Tagalog");
+  strcpy(entry[4].pair[1].trans, "mabilis");
+  strcpy(entry[4].pair[2].lang, "Spanish");
+  strcpy(entry[4].pair[2].trans, "rápido");
+  strcpy(entry[4].pair[3].lang, "Korean");
+  strcpy(entry[4].pair[3].trans, "ppalli");
+  entry[4].pairCount = 4;
+
+  // Entry 5: Translations for "love"
+  strcpy(entry[5].pair[0].lang, "English");
+  strcpy(entry[5].pair[0].trans, "love");
+  strcpy(entry[5].pair[1].lang, "Tagalog");
+  strcpy(entry[5].pair[1].trans, "mahal");
+  strcpy(entry[5].pair[2].lang, "Spanish");
+  strcpy(entry[5].pair[2].trans, "amor");
+  strcpy(entry[5].pair[3].lang, "English");
+  strcpy(entry[5].pair[3].trans, "hate");
+  entry[5].pairCount = 4;
+
+  countEntry = 6; // Total number of entries added
 
   int choice;
   do
