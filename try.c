@@ -8,26 +8,57 @@
 typedef char Str20[MAX_LETTER + 1]; // String type (20 characters + null terminator)
 
 // Structures
-typedef struct translationPairTag{ // holds pair for word
+typedef struct translationPairTag
+{ // holds pair for word
   Str20 lang;
   Str20 trans;
 } translationPairType;
 
-typedef struct entryTag{ // holds each word
+typedef struct entryTag
+{ // holds each word
   translationPairType pairs[MAX_PAIRS];
-  int count;
+  int count; // how many translation pair there is in an entry
 } entryType;
 
+/*
+  Visualization:
+
+  entries[0]:
+   //entryType[0].pairs[0] +-- English -> love
+   //entryType[0].pairs[1] +-- Tagalog -> mahal
+   //entryType[0].pairs[2] +-- Spanish -> amor
+   //entryType[0].pairs[3] +-- Hiligaynon -> gugma
+
+   //entryType[0].count = 4
+
+  entries[1]:
+   //entryType[1].pairs[0] +-- English -> expensive
+   //entryType[1].pairs[1] +-- Tagalog -> mahal
+   //entryType[1].pairs[2] +-- Kapampangan -> mal
+
+   //entryType[1].count = 3
+*/
+
 // Functions
+
+void showEntries(entryType entries[], int entryIndex)
+{
+  int i;
+  for (i = 0; i < entries[entryIndex].count; i++)
+  {
+    printf("Langauge:%s\tTranslation:%s\n", entries[entryIndex].pairs[i].lang, entries[entryIndex].pairs[i].trans);
+  }
+}
+
 int entryExists(entryType entries[], int countEntry, Str20 language, Str20 translate)
 {
   int existFlag = -1;
-  for (int i = 0; i < countEntry; i++)// checks index for each entry
-  { 
-    for (int j = 0; j < entries[i].count; j++)//Checks each pair of translation for that entry
+  for (int i = 0; i < countEntry; i++) // checks index for each entry
+  {
+    for (int j = 0; j < entries[i].count; j++) // Checks each pair of translation for that entry
     {
-      if (strcmp(entries[i].pairs[j].lang, language) == 0 && strcmp(entries[i].pairs[j].trans, translate) == 0) //BRUTE FIRE FORCE LINEAR SEARCH
-      { 
+      if (strcmp(entries[i].pairs[j].lang, language) == 0 && strcmp(entries[i].pairs[j].trans, translate) == 0) // BRUTE FIRE FORCE VIA LINEAR SEARCH
+      {
         existFlag = i; // Found existing entry
       }
     }
@@ -52,7 +83,7 @@ int entryExists(entryType entries[], int countEntry, Str20 language, Str20 trans
  * @param countEntry - Number of entries in the dictionary.
  */
 
-int getEntry(entryType entries[], int *countEntry)
+int addEntry(entryType entries[], int *countEntry)
 {
   int entryFlag = 0;
 
@@ -64,7 +95,7 @@ int getEntry(entryType entries[], int *countEntry)
   else
   {
 
-    Str20 language, translate; //temporary sting to store the input
+    Str20 language, translate; // temporary sting to store the input
 
     printf("Enter language: ");
     scanf("%s", language);
@@ -77,13 +108,14 @@ int getEntry(entryType entries[], int *countEntry)
     if (existingIndex != -1)
     {
       printf("A word in this language already exists!\n");
+      showEntries(entries, existingIndex);
       entryFlag = 0; // word exists
     }
     else
     {
       // Make a new entry
-      entryType *entry = &entries[*countEntry];
-
+      entryType *entry = &entries[*countEntry]; //make a pointer directly to the correct Index we are adding the new bitchass word and language
+      
       strcpy(entry->pairs[0].lang, language);
       strcpy(entry->pairs[0].trans, translate);
       entry->count = 1;
@@ -139,7 +171,7 @@ int main()
   strcpy(entry[0].pairs[2].trans, "amor");
   strcpy(entry[0].pairs[3].lang, "English");
   strcpy(entry[0].pairs[3].trans, "hate");
-  entry[0].count = 3;
+  entry[0].count = 4;
   countEntry = 1;
 
   int choice;
@@ -149,7 +181,7 @@ int main()
     switch (choice)
     {
     case 1:
-      getEntry(entry, &countEntry);
+      addEntry(entry, &countEntry);
       break;
     case 2:
       printf("Feature not yet implemented.\n");
