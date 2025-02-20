@@ -114,7 +114,7 @@ int addEntry(entryType entries[], int *countEntry)
     scanf("%s", translate);
 
     // Check if the language-translation pair already exists
-    matchCount = entryExists(entries, countEntry, language, translate, matchedIndexes);
+    matchCount = entryExists(entries, *countEntry, language, translate, matchedIndexes);
 
     if (matchCount > 0)
     {
