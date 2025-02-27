@@ -394,3 +394,4 @@ int main()
 
   return 0;
 }
+//Change the argument to a specific struct only, not the whole struct of the MP 
