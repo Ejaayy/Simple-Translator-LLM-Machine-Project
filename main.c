@@ -4,7 +4,7 @@ int main()
 {
   entryType entry[MAX_ENTRY];
   int countEntry = 0;
-
+/*
   // Initialize test data
   // Entry 0: Translations related to "love" and "hate"
   strcpy(entry[0].pair[0].lang, "English");
@@ -77,7 +77,7 @@ int main()
   strcpy(entry[5].pair[3].trans, "hate");
   entry[5].pairCount = 4;
 
-  countEntry = 151; // Total number of entries added
+  countEntry = 10; // Total number of entries added
 
   int choice;
   do
