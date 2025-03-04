@@ -16,6 +16,7 @@
 
    //entryType[1].count = 3
 */
+
 char getChoice(char choice)
 {
   scanf(" %c", &choice);
@@ -258,4 +259,3 @@ int displayMainMenu()
 
   return choice;
 }
-
