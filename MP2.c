@@ -367,23 +367,45 @@ void sortEntry(entryType *entry, int countEntry) {
 	}
 }
 
-
 void displayAllEntries(entryType entry[], int countEntry)
 {
-  sortEntry(entry, countEntry); //sort everything
-  
-  int i, j;
-  for (i = 0; i < countEntry; i++) // loops for all match count (same entry)
-  {
-    printf("Entry %d:\n", i + 1);
+    sortEntry(entry, countEntry); // Sort everything
+    int i = 0; // Current index
+    char choice;
 
-    for (j = 0; j < entry[i].pairCount; j++) // prints members of that entry
-    {
-      printf("Langauge: %-15s Translation: %s\n", entry[i].pair[j].lang, entry[i].pair[j].trans);
-    }
-    
-    printf("\n"); // Add a newline for readability
-  }
+    printf("You are now in Display View Mode.\n");
+    printf("Press 'N' to go to the Next entry.\n");
+    printf("Press 'P' to go to the Previous entry.\n");
+    printf("Press 'X' to exit Display View.\n");
+
+    do {
+        // Print the current entry
+        printf("\nEntry %d:\n", i + 1);
+        for (int j = 0; j < entry[i].pairCount; j++) {
+            printf("Language: %-15s Translation: %s\n", entry[i].pair[j].lang, entry[i].pair[j].trans);
+        }
+
+        // Ask for user input
+        printf("\nEnter Choice (N/P/X): ");
+        scanf(" %c", &choice); // Added a space before %c to handle previous newlines
+
+        // Handle navigation
+        if (choice == 'N' || choice == 'n') {
+            if (i >= countEntry - 1) {
+                printf("WARNING: Already at the last entry!\n");
+            } else {
+                i++;
+            }
+        } else if (choice == 'P' || choice == 'p') {
+            if (i <= 0) {
+                printf("WARNING: Already at the first entry!\n");
+            } else {
+                i--;
+            }
+        }
+    } while (choice != 'X' && choice != 'x');
+
+    printf("Exiting Display View Mode...\n");
 }
 
 void deleteEntry(entryType entries[], int *countEntry)
@@ -529,6 +551,55 @@ void deleteTranslation(entryType *entries, int *countEntry)
 		}
 	} 	
 }
+
+void searchWord(entryType *entries, int countEntry){
+	Str20 translationInput;
+	printf("Enter word: ");
+	inputWord(translationInput);
+	
+	//display entries that have matching
+	int i,j;
+	
+	int sameEntryIndex[MAX_ENTRY] = {0};
+	int sameEntryCount = 0;
+	
+	for (i = 0; i < countEntry; i++) {
+	    for (j = 0; j < entries[i].pairCount; j++) {
+	    	if(strcmp(entries[i].pair[j].trans,translationInput)==0){
+	    		sameEntryIndex[sameEntryCount++] = i;
+			} 
+		}
+	}
+	
+	if(sameEntryCount == 0){
+		printf("Word does not exist. Redirecting back to Menu...\n");
+	}
+	else{
+		showMatchedEntries(entries, sameEntryIndex, sameEntryCount);		
+	}
+}
+
+void searchTranslation(entryType *entries, int countEntry)
+{
+	int matchedIndexes[MAX_ENTRY] = {0};
+    int matchCount = 0;
+	Str20 language, translation;
+	
+	printf("Input pair to look for: \n");
+	getLanguageTranslation(language, translation);
+	matchCount = isDuplicate(entries, countEntry, language, translation, matchedIndexes);
+	
+	if (!matchCount)
+	{
+		printf("The pair does not exist! Redirecting back to Manage Data menu.\n");
+	}
+	
+	else 
+	{
+		showMatchedEntries(entries, matchedIndexes, matchCount);
+	}
+}
+
 int displayManageDataMenu()
 {
     int choice;
@@ -563,6 +634,7 @@ int displayManageDataMenu()
 
     return choice;
 }
+
 
 int displayMainMenu()
 {		
