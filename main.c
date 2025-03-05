@@ -86,47 +86,53 @@ int main()
     switch (mainChoice)
     {
 	    case 1:
-	      manageDataChoice = displayManageDataMenu();
-	      switch(manageDataChoice)
-	      {
-	      	case 1:
-	      		addEntry(entry, &countEntry);
-	      	break;
-	      	
-	      	case 2:
-	      		addTranslation(entry, &countEntry);
-	      	break;
-	      	
-	      	case 3:
-	      		deleteEntry(entry, &countEntry);
-	      	break;
-	      	
-	      	case 4:
-	      		deleteTranslation(entry, &countEntry);
-	      	break;
-	      	
-	      	case 5:
-	      		displayAllEntries(entry, countEntry);
-	      	break;
-	      	
-	      	case 6:
-	      	break;
-	      	
-	      	case 7:
-	      	break;
-	      	
-	      	case 8:
-	      	break;	      	
-	      	
-	      	case 9:
-	      	break;
-	      	
-	      	case 10:
-	      	break;		
-	      	
-	    	default:
-	      	printf("Invalid choice! Try again.\n");
-		  }
+	    	do
+	    	{
+	    		manageDataChoice = displayManageDataMenu();
+	      		switch(manageDataChoice)
+	      		{
+			      	case 1:
+			      		addEntry(entry, &countEntry);
+			      	break;
+			      	
+			      	case 2:
+			      		addTranslation(entry, &countEntry);
+			      	break;
+			      	
+			      	case 3:
+			      		deleteEntry(entry, &countEntry);
+			      	break;
+			      	
+			      	case 4:
+			      		deleteTranslation(entry, &countEntry);
+			      	break;
+			      	
+			      	case 5:
+			      		displayAllEntries(entry, countEntry);
+			      	break;
+			      	
+			      	case 6:
+			      		searchWord(entry, countEntry);
+			      	break;
+			      	case 7:
+			      		searchTranslation(entry, countEntry);
+			      	break;
+			      	
+			      	case 8:
+			      	break;	      	
+			      	
+			      	case 9:
+			      	break;
+			      	
+			      	case 10:
+			      		manageDataChoice = 10;
+			      	break;		
+			    
+			    	default:
+			      	printf("Invalid choice! Try again.\n");
+		  		}
+			} while (manageDataChoice != 10);
+	      
 	    break;
 	    case 2:
 	      printf("Wala pa lmao");
