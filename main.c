@@ -90,16 +90,19 @@ int main()
       addEntry(entry, &countEntry);
       break;
     case 2:
-      printf("Add a new entry to the DataBase\n");
+      printf("Add a new translation to the DataBase\n");
       addTranslation(entry, &countEntry);
       break;
     case 3:
-      printf("Exiting program...\n");
+      printf("Delete\n");
+      deleteEntry(entry, &countEntry);
       break;
+	case 4:
+	  printf("Exiting program...\n");
     default:
       printf("Invalid choice! Try again.\n");
     }
-  } while (choice != 3);
+  } while (choice != 4);
 
   return 0;
 }
