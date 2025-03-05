@@ -29,7 +29,7 @@ char getChoice(char choice);
 void toLowerString(char *str);
 void inputWord(char sentence[]);
 void updateLanguageTranslationPair(entryType *entry, Str20 language, Str20 translation);
-void showEntries(entryType entries[], int matchedIndexes[], int matchCount);
+void showMatchedEntries(entryType entries[], int matchedIndexes[], int matchCount);
 int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 translate, int matchedIndexes[]); //Can be revised into isDuplicateLangTransPair
 void getLanguageTranslation(Str20 language, Str20 translation);
 void addEntry(entryType *entries, int *countEntry);
@@ -37,6 +37,8 @@ void addTranslation(entryType *entries, int *countEntry);
 void displayAllEntries(entryType entry[], int countEntry);
 void deleteEntry(entryType entries[], int *countEntry);
 void deleteTranslation(entryType *entries, int *countEntry);
+void searchWord(entryType *entries, int countEntry);
+void searchTranslation(entryType *entries, int countEntry);
 int displayMainMenu();
 
 #include "MP2.c"
