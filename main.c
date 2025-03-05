@@ -4,7 +4,7 @@ int main()
 {
   entryType entry[MAX_ENTRY];
   int countEntry = 0;
-/*
+
   // Initialize test data
   // Entry 0: Translations related to "love" and "hate"
   strcpy(entry[0].pair[0].lang, "English");
@@ -16,6 +16,7 @@ int main()
   strcpy(entry[0].pair[3].lang, "English");
   strcpy(entry[0].pair[3].trans, "hate");
   entry[0].pairCount = 4;
+  countEntry++;
   /*
   Alternative for manually computing for the pairCount
   sizeof(entry[0].pairs) / sizeof(entry[0].pairs[0]);
@@ -32,7 +33,7 @@ int main()
   strcpy(entry[1].pair[3].lang, "French");
   strcpy(entry[1].pair[3].trans, "heureux");
   entry[1].pairCount = 4;
-
+  countEntry++;
   // Entry 2: Translations for "beautiful"
   strcpy(entry[2].pair[0].lang, "English");
   strcpy(entry[2].pair[0].trans, "beautiful");
@@ -43,7 +44,7 @@ int main()
   strcpy(entry[2].pair[3].lang, "Italian");
   strcpy(entry[2].pair[3].trans, "bella");
   entry[2].pairCount = 4;
-
+  countEntry++;
   // Entry 3: Translations for "strong"
   strcpy(entry[3].pair[0].lang, "English");
   strcpy(entry[3].pair[0].trans, "strong");
@@ -54,7 +55,7 @@ int main()
   strcpy(entry[3].pair[3].lang, "German");
   strcpy(entry[3].pair[3].trans, "stark");
   entry[3].pairCount = 4;
-
+  countEntry++;
   // Entry 4: Translations for "fast"
   strcpy(entry[4].pair[0].lang, "English");
   strcpy(entry[4].pair[0].trans, "fast");
@@ -65,7 +66,7 @@ int main()
   strcpy(entry[4].pair[3].lang, "Korean");
   strcpy(entry[4].pair[3].trans, "ppalli");
   entry[4].pairCount = 4;
-
+  countEntry++;
   // Entry 5: Translations for "love"
   strcpy(entry[5].pair[0].lang, "English");
   strcpy(entry[5].pair[0].trans, "love");
@@ -76,8 +77,7 @@ int main()
   strcpy(entry[5].pair[3].lang, "English");
   strcpy(entry[5].pair[3].trans, "hate");
   entry[5].pairCount = 4;
-
-  countEntry = 10; // Total number of entries added
+  countEntry++;
 
   int choice;
   do
@@ -86,11 +86,12 @@ int main()
     switch (choice)
     {
     case 1:
-      printf("Manage Data Menu.\n");
+      printf("Add a new entry to the DataBase\n");
       addEntry(entry, &countEntry);
       break;
     case 2:
-      printf("Translate Menu\n");
+      printf("Add a new entry to the DataBase\n");
+      addTranslation(entry, &countEntry);
       break;
     case 3:
       printf("Exiting program...\n");
