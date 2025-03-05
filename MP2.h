@@ -36,6 +36,7 @@ void addEntry(entryType *entries, int *countEntry);
 void addTranslation(entryType *entries, int *countEntry);
 void displayAllEntries(entryType entry[], int countEntry);
 void deleteEntry(entryType entries[], int *countEntry);
+void deleteTranslation(entryType *entries, int *countEntry);
 int displayMainMenu();
 
 #include "MP2.c"
