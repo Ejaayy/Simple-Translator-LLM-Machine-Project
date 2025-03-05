@@ -17,12 +17,24 @@
    //entryType[1].count = 3
 */
 
-char getChoice(char choice)
-{
-  scanf(" %c", &choice);
-  tolower(choice);
-  return choice;
+char getChoice(char choice) {
+    int validChoice = 0;  // Flag to indicate if input is valid
+    
+    while (validChoice == 0) {  // Loop until valid choice is entered
+        printf("Please enter 'y' or 'n': ");
+        scanf(" %c", &choice);
+        choice = tolower(choice); // Convert input to lowercase
+        
+        if (choice == 'y' || choice == 'n') {
+            validChoice = 1;  // Set flag to 1 if valid input is entered
+        } else {
+            printf("Invalid input. ");
+        }
+    }
+    
+    return choice;
 }
+
 
 void updateLanguageTranslationPair(entryType *entry, Str20 language, Str20 translation)
 {
@@ -49,11 +61,11 @@ void showEntries(entryType entries[], int matchedIndexes[], int matchCount)
 int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 translate, int matchedIndexes[]) //Can be revised into isDuplicateLangTransPair
 {
   int matchPairCount = 0;
-  int found;
-  for (int i = 0; i < countEntry; i++) // checks index for each entry
+  int found, i, j;
+  for (i = 0; i < countEntry; i++) // checks index for each entry
   {
     found = 0; // Reset flag for each entry
-    for (int j = 0; j < entries[i].pairCount; j++) // Checks each pair of translation for that entry
+    for (j = 0; j < entries[i].pairCount; j++) // Checks each pair of translation for that entry
     {
       if (!strcmp(entries[i].pair[j].lang, language) && !strcmp(entries[i].pair[j].trans, translate)) // BRUTE FIRE FORCE VIA LINEAR SEARCH
       {
@@ -68,16 +80,22 @@ int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 trans
   return matchPairCount; // No match found
 }
 
-void getLanguageTranslation(Str20 language, Str20 translation)
-{
-  do
-  {
-    printf("Input for language-translation pair:\n");
-    printf("Enter language: ");
-    scanf("%s", language);
-    printf("Enter translation: ");
-    scanf("%s", translation);
-  } while (!strlen(language) && !strlen(translation)); // loop while language and translation each doesn't have at least 1 character
+void getLanguageTranslation(Str20 language, Str20 translation) {
+    do {
+        printf("Input for language-translation pair:\n");
+        
+        // Clear the input buffer before reading with fgets
+        printf("Enter language: ");
+        fgets(language, MAX_LETTER, stdin);
+        // Remove the newline character at the end, if any
+        language[strcspn(language, "\n")] = 0;
+
+        printf("Enter translation: ");
+        fgets(translation, 20, stdin);
+        // Remove the newline character at the end, if any
+        translation[strcspn(translation, "\n")] = 0;
+
+    } while (strlen(language) == 0 || strlen(translation) == 0); // loop while language or translation is empty
 }
 
 /*
@@ -99,137 +117,162 @@ void getLanguageTranslation(Str20 language, Str20 translation)
 
 void addEntry(entryType *entries, int *countEntry)
 {
-  char choice = 'y';
-  int matchedIndexes[MAX_ENTRY] = {0};
-  int matchCount = 0;
-  int entryFlag = 1;
-  Str20 language, translation; // temporary string to store the input
+    int entryFlag = 1;
+    char choice = 'y';
+    int matchedIndexes[MAX_ENTRY] = {0};
+    int matchCount = 0;
+    Str20 language, translation;                                                          // temporary string to store the input
 
-  if (*countEntry >= MAX_ENTRY) // check if max entry concept count has been reached
-  {
-    printf("Cannot add more entries. Dictionary is full!\n");
-    entryFlag = 0;
-  }
-  else
-  {
-    while (choice == 'y' && entryFlag)
+    if (*countEntry >= MAX_ENTRY)                                                         // check if max entry count has been reached
     {
-      getLanguageTranslation(language, translation);
-
-      // Make a new entry
-      entryType *entry = &entries[*countEntry]; // make a pointer directly to the correct Index we are adding the new bitchass word and language
-
-      // check if max pairs in that entry has been reached
-      if (entry->pairCount >= MAX_PAIRS)
-      {
-        printf("This entry already has the maximum number of translation pairs!");
+        printf("Cannot add more entries. Dictionary is full!\n");
         entryFlag = 0;
-      }
-
-      // if not, contrinue to add the new pair
-      else
-      {
-        // Check if the language-translation pair already exists and saves the index of same entry in matchedIndexes
-        matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes);
-
-        if (matchCount > 0)
-        {
-          showEntries(entries, matchedIndexes, matchCount);
-          printf("This language-translation pair already exists!\nIs this a new entry? (y/n): ");
-          choice = getChoice(choice);
-          if (choice == 'n')
-            entryFlag = 0;
-        }
-
-        // if user wants to continue adding a new translation pair to that entry
-        if (choice == 'y')
-        {
-          updateLanguageTranslationPair(entries, language, translation);
-          printf("Add language-translation pair? (y/n): ");
-          choice = getChoice(choice);
-        }
-      }
     }
-  }
-  if (entryFlag) // checks if the user did not
-  {
-    (*countEntry)++; // increment total entries count
-    printf("New entry added successfully!\n");
-  }
-}
+    else
+    {
+        while (choice == 'y' && entryFlag)                                                //Enter loop while the user wants to add an entry
+        {
+            getLanguageTranslation(language, translation);                                // input language translation pair
+            
+                                                                                          // Recalculate matchCount inside the loop (checks against all current entries)
+            matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes);
 
+            if (matchCount > 0)                                                           // if an existing pair matches what the user input
+            {
+                showEntries(entries, matchedIndexes, matchCount);                         // shows all matched entries
+                
+                printf("This language-translation pair already exists!");                 //Notify the user that it found a similar entry, Asks user if it this is a new entry
+				printf("\nIs this a new entry? (y/n): ");
+                
+                choice = getChoice(choice);
+                if (choice == 'n') {                                                      //If user said no, this is not a new entry, exits the loop
+                    entryFlag = 0;                         
+                }
+                else if (choice == 'y') {											      //If user said yes, this is a new entry
+                    
+                    entries[*countEntry].pairCount = 0;                                   // Initialize new pair count for new entry
+                    updateLanguageTranslationPair(&entries[*countEntry], language, translation); //update data base
+        			(*countEntry)++;  													  // Increment countEntry because we added a new pair
+					printf("New entry has been added successfully!\n"); 
+					                    
+					while (choice == 'y')												  
+					{
+						printf("Add another language-translation pair to the current entry? (y/n): ");
+                    	choice = getChoice(choice);
+                    	if (choice == 'y')
+                    	{
+                    		getLanguageTranslation(language, translation);
+                    		updateLanguageTranslationPair(&entries[*countEntry], language, translation);
+                    		printf("New lanugage-translation pair has been added successfully!\n");
+                    		printf("%d\n", entries->pairCount);
+                    	}
+					}        
+                }
+            }
+            else                                                                         // Pair doesn't exist
+            {
+                printf("This language-translation pair does not exist!\nIs this a new entry? (y/n): ");
+                choice = getChoice(choice);                                              // ask user if input is a new entry
+                if (choice == 'n') {
+                    entryFlag = 0;                                                       // User doesn't want to add a new entry
+                }
+                else if (choice == 'y') {
+                    // User wants to add this new pair
+                    entries[*countEntry].pairCount = 0; 
+                    updateLanguageTranslationPair(&entries[*countEntry], language, translation);
+                    (*countEntry)++; // Increment countEntry as we successfully add a new entry
+                    printf("New entry has been added successfully!\n");
+                    while (choice == 'y')
+					{
+						printf("Add another language-translation pair to the current entry? (y/n): ");
+                    	choice = getChoice(choice);
+                    	if (choice == 'y')
+                    	{
+                    		getLanguageTranslation(language, translation);
+                    		updateLanguageTranslationPair(&entries[*countEntry], language, translation);
+                    		printf("New lanugage-translation pair has been added successfully!\n");
+                    		printf("%d\n", entries->pairCount);
+                    	}
+					} 
+                }
+            }
+        }
+    }
+}
 void addTranslation(entryType *entries, int *countEntry)
 {
-  char choice = 'y';
-  int matchedIndexes[MAX_ENTRY] = {0};
-  int matchCount = 0;
-  Str20 language, translation;
-  int selectedIndex = 0;
-  int i;
+    char choice = 'y';                            
+    int matchedIndexes[MAX_ENTRY] = {0};          
+    int matchCount = 0;                       
+    Str20 language, translation;                 
+    int selectedIndex = 0;                   
+    int i;
 
-  getLanguageTranslation(language, translation);                                         // Prompt the user to enter the language and translation pair to search for
+    getLanguageTranslation(language, translation);                                         // Prompt the user to enter the language and translation pair to search for
 
-  matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes);  // Check if an entry exists with the given language and translation
-                                                                                         // Store matching entry indexes in matchedIndexes and count in matchCount
+    matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes); // Check if an entry exists with the given language and translation pair
+                                                                                           // Store matching entry indexes in matchedIndexes and count in matchCount
 
-  if (!matchCount)                                                                       // If no matching entry is found
-  {
-    printf("The entry doesn't exist.\nAdd entry? (y/n): ");                              // Inform the user that no entry exists
-    choice = getChoice(choice);                                                          // Suggest using the Add Entry option
-
-    if (choice == 'y')                                                                    
+    if (matchCount <= 0)                                                                   // If no matching entry is found
     {
-      addEntry(entries, countEntry);                                                     // if user answers 'Y', Call the addEntry function
-    }
-    else 																				 // else, exit the function (but needs to be changed)                
-    {
-      return;                                                                                             
-    }
-  }
-  else                                                                                   // But if matching entry was/were found
-  {
-    showEntries(entries, matchedIndexes, matchCount);                                    // Display all matched entries
+        printf("The entry doesn't exist.\nAdd entry? (y/n): ");                            // Inform the user that no entry exists
+        choice = getChoice(choice);                                                        // Suggest using the Add Entry option
 
-    if (matchCount == 1 )                                                                // If only one matching entry exists
-    {
-      if (entries[matchedIndexes[0]].pairCount >= MAX_PAIRS)							
-      {
-        printf("The entry has already the max number of pairs.\n");
-        return;                                                                          
-      }
-      else                                                                               // Else add that to the entry
-      {
-        updateLanguageTranslationPair(&entries[matchedIndexes[0]], language, translation);
-      }
-    }
-    else                                                                                 // Else if multiple matching entries exist
-    {
-      do                                                                                
-      {
-        printf("Enter Entry Number to add translation: (1-%d)", matchCount);             // Ask the user to select which entry to update
-        scanf("%d", &selectedIndex);
-      } while (selectedIndex < 1 || selectedIndex > matchCount);                         // Validate user input to ensure a valid selection
-
-      selectedIndex = matchedIndexes[selectedIndex - 1];                                 // convert user input to actual index
-
-      if (entries[selectedIndex].pairCount >= MAX_PAIRS)                                 // Check if the entry already has the maximum number of translation pairs
-      {
-        printf("The selected entry already has the maximumm number of translation pairs.\n");
-        return;                                                                
-      }
-      else                                                                               
-      {
-        do																			     //loop to add multiple translations
+        if (choice == 'y')                                                                 
         {
-          getLanguageTranslation(language, translation);							     //  Prompt the user to enter the new language and translation pair
-          updateLanguageTranslationPair(&entries[selectedIndex], language, translation); // Add the new language-translation pair to the selected entry
-
-          printf("Add language-translation pair? (y/n): ");   							 // Ask the user if they want to add another translation
-          choice = getChoice(choice);
-        } while (choice == 'y');
-      }
+            addEntry(entries, countEntry);                                                 // If user answers 'Y', call the addEntry function
+            return;                                                                         // Exit after adding an entry and prevent further logic here
+        }
+        else 																			     
+        {
+            return;                                                                         // Exit the function (go back to Manage Data menu)
+        }
     }
-  }
+    else                                                                                   // If matching entry was/were found
+    {
+        showEntries(entries, matchedIndexes, matchCount);                                  // Show all matched entries
+
+        if (matchCount == 1)                                                                // If only one matching entry exists
+        {
+            if (entries[matchedIndexes[0]].pairCount >= MAX_PAIRS)                         // Check if the entry already has the max number of pairs
+            {
+                printf("The entry already has the maximum number of pairs.\n");
+                return;                                                                     // Exit function if the entry has reached its max pairs
+            }
+            else                                                                           // Otherwise, add the new pair to the entry
+            {
+                getLanguageTranslation(language, translation);                             // Get the new language-translation pair
+                updateLanguageTranslationPair(&entries[matchedIndexes[0]], language, translation);  // Update the entry with the new pair
+                entries[matchedIndexes[0]].pairCount++;                                    // Update the pair count
+            }
+        }
+        else                                                                                 // If multiple matching entries exist
+        {
+            do                                                                             
+            {
+                printf("Enter Entry Number to add translation (1-%d): ", matchCount);       // Prompt user to select which entry to update
+                scanf("%d", &selectedIndex);                                               // Get the user input for the selected entry
+            } while (selectedIndex < 1 || selectedIndex > matchCount);                      // Validate user input to ensure a valid selection (within the number of matches)
+
+            selectedIndex = matchedIndexes[selectedIndex - 1];                             // Convert 1-based user input to 0-based index
+
+            if (entries[selectedIndex].pairCount >= MAX_PAIRS)                             // Check if the selected entry already has the max number of pairs
+            {
+                printf("The selected entry already has the maximum number of translation pairs.\n");
+                return;                                                                     // Exit if the entry has reached its max pairs
+            }
+
+            do                                                                             
+            {
+                getLanguageTranslation(language, translation);                             // Prompt for the new language-translation pair
+                updateLanguageTranslationPair(&entries[selectedIndex], language, translation);  // Add the new pair to the selected entry
+                entries[selectedIndex].pairCount++;                                        // Update the pair count for the selected entry
+
+                printf("Add another language-translation pair? (y/n): ");                 // Ask the user if they want to add another pair
+                choice = getChoice(choice);                                                 // Get the user's choice
+            } while (choice == 'y' && entries[selectedIndex].pairCount < MAX_PAIRS);        // Loop to add more translations, but prevent adding if the max count is reached
+        }
+    }
 }
 
 int displayMainMenu()
@@ -238,8 +281,9 @@ int displayMainMenu()
   do
   {
     printf("\n===== MAIN MENU =====\n");
-    printf("1. Put a new word\n");
-    printf("2. Display (Not yet implemented)\n");
+    printf("1. Put a new entry\n");
+    printf("2. Add a new Translation\n");
+    printf("3. Display all Entries\n");
     printf("3. Exit\n");
     printf("Enter your choice: ");
 
