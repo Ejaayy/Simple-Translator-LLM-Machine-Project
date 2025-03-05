@@ -16,6 +16,103 @@
 
    //entryType[1].count = 3
 */
+void displayAllEntries(entryType entry[], int countEntry)
+{
+  int i, j;
+  for (i = 0; i < countEntry; i++) // loops for all match count (same entry)
+  {
+    printf("Entry %d:\n", i + 1);
+
+    for (j = 0; j < entry[i].pairCount; j++) // prints members of that entry
+    {
+      printf("Langauge: %-15s Translation: %s\n", entry[i].pair[j].lang, entry[i].pair[j].trans);
+    }
+    
+    printf("\n"); // Add a newline for readability
+  }
+}
+void deleteEntry(entryType entries[], int *countEntry)
+{
+    int selectedIndex;
+    int validIndex = 1;
+    int i;
+
+    // Display all current entries before asking which one to delete
+    displayAllEntries(entries, *countEntry);
+
+
+	printf("Enter the entry number to delete (1-%d): ", *countEntry);
+	scanf("%d", &selectedIndex);    
+	
+	if (selectedIndex < 1 || selectedIndex > *countEntry)
+	{
+	    printf("Invalid entry number! Redirecting back to Manage Data Menu.\n");
+	    validIndex = 0; // Stay in the loop
+	}
+	else
+	{
+		validIndex = 1;	
+	} 
+
+    if (validIndex)
+    {
+	    // Convert 1-based index to 0-based index
+	    selectedIndex--;
+	
+	    // Shift the entries left to remove the selected entry
+	    for (i = selectedIndex; i < *countEntry - 1; i++)
+	    {
+	        entries[i] = entries[i + 1]; // Overwrite current entry with the next entry
+	    }
+	
+	    // Reduce the entry count
+	    (*countEntry)--;
+	
+	    printf("Entry deleted successfully!\n");
+    }
+}
+
+void deleteTranslation(entryType *entries, int *countEntry)
+{
+	// Display all current entries before asking which one to delete
+    displayAllEntries(entries, *countEntry);
+
+    do 
+	{
+	    printf("Enter the entry number to delete (1-%d): ", *countEntry);
+	    scanf("%d", &selectedIndex);    
+	
+	    if (selectedIndex < 1 || selectedIndex > *countEntry)
+	    {
+	        printf("Invalid entry number! Please try again.\n");
+	        validIndex = 0; // Stay in the loop
+	    }
+	    else
+	    {
+	        validIndex = 1; // Exit the loop when input is valid
+	    }
+	} while (!validIndex);
+    
+    // Convert 1-based index to 0-based index
+    selectedIndex--;
+    
+    do 
+	{
+	    printf("Enter the pair number to delete (1-%d): ", entries[selectedIndex].pairCount);
+	    scanf("%d", &selectedIndexPair);    
+	
+	    if (selectedIndexPair < 1 || selectedIndexPair > entries[selectedIndex].pairCount)
+	    {
+	        printf("Invalid entry number! Please try again.\n");
+	        validPairIndex = 0; // Stay in the loop
+	    }
+	    else
+	    {
+	        validPairIndex = 1; // Exit the loop when input is valid
+	    }
+	} while (!validPairIndex);
+	selectedIndexPair--;
+}
 
 char getChoice(char choice) 
 {
@@ -256,7 +353,7 @@ void addTranslation(entryType *entries, int *countEntry)
         if (choice == 'y')                                                                 
         {
         	printf("Redirecting you to add entry.\nAdd entry:\n");
-            addEntry(entries, countEntry);                                                 // If user answers 'Y', call the addEntry function                                                                         // Exit after adding an entry and prevent further logic here
+            addEntry(entries, countEntry);                                                 // If user answers 'Y', call the addEntry function           // Exit after adding an entry and prevent further logic here
         }
     }
     else                                                                                   // If matching entry was/were found
