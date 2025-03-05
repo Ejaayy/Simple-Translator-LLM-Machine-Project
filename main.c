@@ -78,31 +78,66 @@ int main()
   strcpy(entry[5].pair[3].trans, "hate");
   entry[5].pairCount = 4;
   countEntry++;
-
-  int choice;
+  int manageDataChoice;
+  int mainChoice;
   do
   {
-    choice = displayMainMenu();
-    switch (choice)
+    mainChoice = displayMainMenu();
+    switch (mainChoice)
     {
-    case 1:
-      printf("Add a new entry to the DataBase\n");
-      addEntry(entry, &countEntry);
-      break;
-    case 2:
-      printf("Add a new translation to the DataBase\n");
-      addTranslation(entry, &countEntry);
-      break;
-    case 3:
-      printf("Delete\n");
-      deleteEntry(entry, &countEntry);
-      break;
-	case 4:
-	  printf("Exiting program...\n");
-    default:
-      printf("Invalid choice! Try again.\n");
+	    case 1:
+	      manageDataChoice = displayManageDataMenu();
+	      switch(manageDataChoice)
+	      {
+	      	case 1:
+	      		addEntry(entry, &countEntry);
+	      	break;
+	      	
+	      	case 2:
+	      		addTranslation(entry, &countEntry);
+	      	break;
+	      	
+	      	case 3:
+	      		deleteEntry(entry, &countEntry);
+	      	break;
+	      	
+	      	case 4:
+	      		deleteTranslation(entry, &countEntry);
+	      	break;
+	      	
+	      	case 5:
+	      		displayAllEntries(entry, countEntry);
+	      	break;
+	      	
+	      	case 6:
+	      	break;
+	      	
+	      	case 7:
+	      	break;
+	      	
+	      	case 8:
+	      	break;	      	
+	      	
+	      	case 9:
+	      	break;
+	      	
+	      	case 10:
+	      	break;		
+	      	
+	    	default:
+	      	printf("Invalid choice! Try again.\n");
+		  }
+	    break;
+	    case 2:
+	      printf("Wala pa lmao");
+	      break;
+	    case 3:
+	      printf("Exit bruh\n");
+	      break;
+	    default:
+	      printf("Invalid choice! Try again.\n");
     }
-  } while (choice != 4);
+  } while (mainChoice != 3);
 
   return 0;
 }
