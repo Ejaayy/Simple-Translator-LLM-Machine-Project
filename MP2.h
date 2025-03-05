@@ -1,3 +1,4 @@
+
 #ifndef MP2_H
 #define MP2_H
 
@@ -33,6 +34,8 @@ int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 trans
 void getLanguageTranslation(Str20 language, Str20 translation);
 void addEntry(entryType *entries, int *countEntry);
 void addTranslation(entryType *entries, int *countEntry);
+void displayAllEntries(entryType entry[], int countEntry);
+void deleteEntry(entryType entries[], int *countEntry);
 int displayMainMenu();
 
 #include "MP2.c"
