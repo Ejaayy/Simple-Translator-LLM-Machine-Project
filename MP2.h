@@ -10,7 +10,7 @@
 #define MAX_PAIRS 10  // Max language-translation pairs per entry
 #define MAX_ENTRY 150 // Max dictionary entries
 #define MAX_WORDS 50 //gawa gawa ko lang
-
+#define MAX_SENTENCES 50
 typedef char Str20[MAX_LETTER + 1]; // String type (20 characters + null terminator)
 
 // Structures
@@ -52,6 +52,8 @@ int filterWords(char *textInput, Str20 filteredWords[]);
 void printFilteredWords(Str20 filteredWords[], int wordCount);
 char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str20 sourceLanguage, Str20 outputLanguage);
 void translateTextInput(entryType *entries, int countEntry);
+char* translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[]);
+void translateTextFile(entryType *entries, int countEntry);
 #include "MP2.c"
 #include "translateFunction.c"
 #endif
