@@ -164,7 +164,7 @@ countEntry++;
 		    		break;
 		    		
 		    		case 2:
-	
+						translateTextFile(entry, countEntry);
 		    		break;
 		    		
 		    		case 3:
