@@ -1,44 +1,48 @@
-
-
 int filterWords(char *textInput, Str20 filteredWords[]) {
     int wordCount = 0;       
     Str20 word = {0};        
-    int wordIndex = 0;      
+    int letterIndex = 0;      
     int i;
     
     // Loop through each character in the textInput
-    for (i = 0; textInput[i] != '\0'; i++) {
+    for (i = 0; textInput[i] != '\0'; i++) 
+	{
         
-		if (isalpha(textInput[i]) && wordIndex < sizeof(Str20) - 1) {
-		    word[wordIndex++] = textInput[i];
+		if (((textInput[i] >= 'A' && textInput[i] <= 'Z') || (textInput[i] >= 'a' && textInput[i] <= 'z')) && letterIndex < sizeof(Str20) - 1) //instead of isalpha()
+		{
+		    word[letterIndex++] = textInput[i];
 		}
         
-        else if (textInput[i] == ' ' || textInput[i] == '\n') { // space or \n means end of a word
+        else if (textInput[i] == ' ' || textInput[i] == '\n') 
+		{ // space or \n means end of a word
             
-            word[wordIndex] = '\0';  // Null char the word to mark its end
+            word[letterIndex] = '\0';  // Null char the word to mark its end
                 
-            if (wordCount < MAX_WORDS) { // Store the word in the filteredWords array if there's still space
+            if (wordCount < MAX_WORDS) 
+			{ // Store the word in the filteredWords array if there's still space
                 strcpy(filteredWords[wordCount++], word);
             }
-
-            wordIndex = 0; 
-
+            
+            letterIndex = 0; 
         }
     }
 
     // Handle the last word
     //checks if ther is still a word thats needed to be put into filtered words
-    if (wordIndex > 0 && wordCount < MAX_WORDS) {
-        word[wordIndex] = '\0';       // Null the final word
+    if (letterIndex > 0 && wordCount < MAX_WORDS) 
+	{
+        word[letterIndex] = '\0';       // Null the final word
         strcpy(filteredWords[wordCount++], word);  // Store it in the array
     }
 
     return wordCount;  // Return the total number of words filtered
 }
 
-void printFilteredWords(Str20 filteredWords[], int wordCount) {
+void printFilteredWords(Str20 filteredWords[], int wordCount) 
+{
+	int i;
     printf("Filtered words:\n");
-    for (int i = 0; i < wordCount; i++) {
+    for (i = 0; i < wordCount; i++) {
         printf("%s\n", filteredWords[i]);
     }
 }
@@ -50,7 +54,8 @@ char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str
     int matchPairCount;
     int i, j;
     int foundIndex = -1;               
-    int found = 0;                    
+    int found = 0;      
+	Str20 tempTranslation;              
 
     // Default to original word (if no translation is found)
     strcpy(translatedWord, filteredWord);
@@ -62,6 +67,7 @@ char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str
     {
         for (i = 0; i < matchPairCount && !found; i++) 
         {
+        	found = 0;
             for (j = 0; j < entries[matchedIndexes[i]].pairCount && !found; j++) //checks that entry
             {
                 if (strcmp(entries[matchedIndexes[i]].pair[j].lang, outputLanguage) == 0) //checks if the language user wants to output exists
@@ -89,6 +95,7 @@ void translateTextInput(entryType *entries, int countEntry) {
 	Str20 outputLanguage;
 	Str20 filteredWords[MAX_WORDS];  // Array to store filtered words
 	Str20 translatedWords[MAX_WORDS];  // Array to store filtered words
+	Str20 tempTranslation;
 	int wordCount = 0;  // Tracks number of filtered words
 	int i;
 
@@ -104,30 +111,35 @@ void translateTextInput(entryType *entries, int countEntry) {
 		// Ask for text input
 		printf("You are going to translate from %s to %s.\n", sourceLanguage, outputLanguage);
 		printf("Input text to be translated: ");
-		fgets(sourceText, 150, stdin);	
+		fgets(sourceText, 151, stdin);	
 		
 		// Filter words directly into an array
 		wordCount = filterWords(sourceText, filteredWords);
 
 		// Display filtered words for confirmation
 		printf("\nWords in %s: ", sourceLanguage);
-		for (i = 0; i < wordCount; i++) {
+		for (i = 0; i < wordCount; i++) 
+		{
 			printf("%s ", filteredWords[i]);
 		}
 		printf("\n");
+		//can use special case wherein the last word wont include an additional space anymore
 
 		// Translation logic using filteredWords array
-		for (i = 0; i < wordCount; i++) {
-			Str20 tempTranslation;  // Temporary storage for clarity
+		for (i = 0; i < wordCount; i++) 
+		{  //Translate inputted words to desired translation of the user
+			tempTranslation[0] = '\0';
 			strcpy(tempTranslation, translateWord(entries, countEntry, filteredWords[i], sourceLanguage, outputLanguage));
-			strcpy(translatedWords[i], tempTranslation);
+			strcpy(translatedWords[i], tempTranslation); //Stored in the translatedWords
 		}
 
 		printf("\nWords in %s: ", outputLanguage);
-		for (i = 0; i < wordCount; i++) {
+		for (i = 0; i < wordCount; i++) 
+		{
 			printf("%s ", translatedWords[i]);
 		}
 		printf("\n");
+		//can use special case wherein the last word wont include an additional space anymore
 		
 		// Ask if the user wants to continue
 		printf("Do you want to translate more text? (y/n): ");
@@ -136,69 +148,77 @@ void translateTextInput(entryType *entries, int countEntry) {
 	} while (choice == 'y' || choice == 'Y');
 }
 
-
-char* translateWord(entryType entries[], int countEntry, char* word, char sourceLang[], char targetLang[]);
-void inputWord(char *word);
-
 // Function to translate a single sentence
-char* translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[]) {
-    static char translatedSentence[MAX_LETTER * 10] = {0};
-    translatedSentence[0] = '\0'; // Reset buffer
+void translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[], char translatedSentence[]){
     char word[MAX_LETTER] = {0};
     int wordIndex = 0, translatedIndex = 0;
+    Str20 translatedWord;
+    int i;
+    
+    translatedSentence[0] = '\0'; // Reset buffer
 
-    for (int i = 0; sentence[i] != '\0'; i++) {
-        if ((sentence[i] == ' ') || 
-            (sentence[i] == '.') || 
-            (sentence[i] == '?') || 
-            (sentence[i] == '!')) {
-            if (wordIndex > 0) {
+    for (i = 0; sentence[i] != '\0'; i++) 
+	{
+        if ((sentence[i] == ' ') || (sentence[i] == '.') || (sentence[i] == '?') || (sentence[i] == '!')) 
+		{
+            if (wordIndex > 0) //processes the word
+			{
                 word[wordIndex] = '\0';
-                char* translatedWord = translateWord(entries, countEntry, word, sourceLanguage, outputLanguage);
-                if (translatedWord) {
+                strcpy(translatedWord, translateWord(entries, countEntry, word, sourceLanguage, outputLanguage));
+                if (translatedWord != NULL) 
+				{
                     strcpy(translatedSentence + translatedIndex, translatedWord);
                     translatedIndex += strlen(translatedWord);
                 }
                 wordIndex = 0;
             }
-            
-            if (strchr(".?!", sentence[i])) {
+    
+            if ((sentence[i] == '.') || (sentence[i] == '?') || (sentence[i] == '!')) //processes the punctuation mark
+			{
                 translatedSentence[translatedIndex++] = sentence[i];
                 translatedSentence[translatedIndex++] = '\n'; // Force newline
-                while (sentence[i + 1] && isspace(sentence[i + 1])) i++;
+                while (sentence[i + 1] == ' ') 
+					i++;
             }
-            else if (translatedIndex > 0 && translatedSentence[translatedIndex - 1] != ' ') {
+            else if (translatedIndex > 0 && translatedSentence[translatedIndex - 1] != ' ') 
+			{
                 translatedSentence[translatedIndex++] = ' ';
             }
-        } else {
+    	} 
+		else 
+		{
             word[wordIndex++] = sentence[i];
         }
     }
 
     // Process last word
-    if (wordIndex > 0) {
+    if (wordIndex > 0) 
+	{
         word[wordIndex] = '\0';
-        char* translatedWord = translateWord(entries, countEntry, word, sourceLanguage, outputLanguage);
-        if (translatedWord) {
+        strcpy(translatedWord, translateWord(entries, countEntry, word, sourceLanguage, outputLanguage));
+        if (translatedWord) 
+		{
             strcpy(translatedSentence + translatedIndex, translatedWord);
             translatedIndex += strlen(translatedWord);
         }
     }
 
     // Trim trailing space/newline
-    if (translatedIndex > 0) {
+    if (translatedIndex > 0) 
+	{
         if (translatedSentence[translatedIndex - 1] == ' ') translatedIndex--;
         if (translatedSentence[translatedIndex - 1] == '\n') translatedIndex--;
     }
     translatedSentence[translatedIndex] = '\0';
-    return translatedSentence;
 }
 
 // Function to process text files
 void translateTextFile(entryType *entries, int countEntry) {
+	int i;
     Str20 sourceFile, outputLanguage, sourceLanguage, outputFile;
     char buffer[151] = {0};
     char sentenceBuffer[10][151] = {0};
+    char translated[10][151] = {0};
 
     printf("What is the file you are going to translate: ");
     inputWord(sourceFile);    
@@ -214,8 +234,10 @@ void translateTextFile(entryType *entries, int countEntry) {
 
     if (!ptrSourceFile || !ptrOutputFile) {
         printf("Error opening files!\n");
-        if (ptrSourceFile) fclose(ptrSourceFile);
-        if (ptrOutputFile) fclose(ptrOutputFile);
+        if (ptrSourceFile) 
+			fclose(ptrSourceFile);
+        if (ptrOutputFile) 
+			fclose(ptrOutputFile);
         return;
     }
 
@@ -251,11 +273,11 @@ void translateTextFile(entryType *entries, int countEntry) {
         }
 
         // Translate and write sentences
-        for (int i = 0; i < sentenceNum; i++) {
-            if (strlen(sentenceBuffer[i]) == 0) continue;
-            char* translated = translateSentence(entries, countEntry, sentenceBuffer[i], 
-                                               sourceLanguage, outputLanguage);
-            fprintf(ptrOutputFile, "%s\n", translated);
+        for (i = 0; i < sentenceNum; i++) {
+            if (strlen(sentenceBuffer[i]) == 0) 
+				continue;
+            translateSentence(entries, countEntry, sentenceBuffer[i], sourceLanguage, outputLanguage, translated[i]);
+            fprintf(ptrOutputFile, "%s\n", translated[i]);
         }
     }
 
