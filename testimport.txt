@@ -1,0 +1,341 @@
+english: i
+spanish: yo
+french: je
+german: ich
+tagalog: ako
+italian: io
+japanese: watashi
+korean: na
+chinese: wo
+greek: nae
+german: nie
+
+english: you
+spanish: tu
+french: tu
+german: du
+tagalog: ikaw
+italian: tu
+japanese: anata
+korean: neo
+chinese: ni
+
+english: he
+spanish: el
+french: il
+german: er
+tagalog: siya
+italian: lui
+japanese: kare
+korean: geu
+chinese: ta
+
+english: she
+spanish: ella
+french: elle
+german: sie
+tagalog: siya
+italian: lei
+japanese: kanojo
+korean: geunyeo
+chinese: ta
+
+english: we
+spanish: nosotros
+french: nous
+german: wir
+tagalog: tayo
+italian: noi
+japanese: watashitachi
+korean: uri
+chinese: women
+
+english: they
+spanish: ellos
+french: ils
+german: sie
+tagalog: sila
+italian: loro
+japanese: karera
+korean: geudeul
+chinese: tamen
+
+english: love
+spanish: amor
+french: amour
+german: liebe
+tagalog: pag-ibig
+italian: amore
+japanese: ai
+korean: sarang
+chinese: ai
+
+english: like
+spanish: gustar
+french: aimer
+german: mögen
+tagalog: gusto
+italian: piacere
+japanese: suki
+korean: johahada
+chinese: xihuan
+
+english: want
+spanish: querer
+french: vouloir
+german: wollen
+tagalog: gusto
+italian: volere
+japanese: hoshii
+korean: wonhada
+chinese: yao
+
+english: need
+spanish: necesitar
+french: avoir besoin
+german: brauchen
+tagalog: kailangan
+italian: bisogno
+japanese: hitsuyou
+korean: pil-yohada
+chinese: xuyao
+
+english: water
+spanish: agua
+french: eau
+german: wasser
+tagalog: tubig
+italian: acqua
+japanese: mizu
+korean: mul
+chinese: shui
+
+english: bread
+spanish: pan
+french: pain
+german: brot
+tagalog: tinapay
+italian: pane
+japanese: pan
+korean: ppang
+chinese: mianbao
+
+english: sugar
+spanish: azucar
+french: sucre
+german: zucker
+tagalog: asukal
+italian: zucchero
+japanese: satou
+korean: seoltang
+chinese: tang
+
+english: salt
+spanish: sal
+french: sel
+german: salz
+tagalog: asin
+italian: sale
+japanese: shio
+korean: sogeum
+chinese: yan
+
+english: pepper
+spanish: pimienta
+french: poivre
+german: pfeffer
+tagalog: paminta
+italian: pepe
+japanese: koshou
+korean: huchu
+chinese: hujiao
+
+english: rice
+spanish: arroz
+french: riz
+german: reis
+tagalog: kanin
+italian: riso
+japanese: gohan
+korean: bap
+chinese: mifan
+
+english: milk
+spanish: leche
+french: lait
+german: milch
+tagalog: gatas
+italian: latte
+japanese: gyuunyuu
+korean: uyu
+chinese: niunai
+
+english: egg
+spanish: huevo
+french: oeuf
+german: ei
+tagalog: itlog
+italian: uovo
+japanese: tamago
+korean: gyeran
+chinese: jidan
+
+english: fish
+spanish: pescado
+french: poisson
+german: fisch
+tagalog: isda
+italian: pesce
+japanese: sakana
+korean: saengseon
+chinese: yu
+
+english: meat
+spanish: carne
+french: viande
+german: fleisch
+tagalog: karne
+italian: carne
+japanese: niku
+korean: gogi
+chinese: rou
+
+english: yes
+spanish: si
+french: oui
+german: ja
+tagalog: oo
+italian: si
+japanese: hai
+korean: ne
+chinese: shi
+
+english: no
+spanish: no
+french: non
+german: nein
+tagalog: hindi
+italian: no
+japanese: iie
+korean: aniyo
+chinese: bu
+
+english: hello
+spanish: hola
+french: bonjour
+german: hallo
+tagalog: kumusta
+italian: ciao
+japanese: konnichiwa
+korean: annyeong
+chinese: nihao
+
+english: goodbye
+spanish: adios
+french: au revoir
+german: auf wiedersehen
+tagalog: paalam
+italian: arrivederci
+japanese: sayonara
+korean: annyeong
+chinese: zaijian
+
+english: please
+spanish: por favor
+french: s'il vous plait
+german: bitte
+tagalog: pakiusap
+italian: per favore
+japanese: onegai
+korean: juseyo
+chinese: qing
+
+english: thank you
+spanish: gracias
+french: merci
+german: danke
+tagalog: salamat
+italian: grazie
+japanese: arigatou
+korean: gamsahamnida
+chinese: xiexie
+
+english: sorry
+spanish: lo siento
+french: desole
+german: entschuldigung
+tagalog: pasensya
+italian: mi dispiace
+japanese: gomennasai
+korean: joesonghamnida
+chinese: duibuqi
+
+english: help
+spanish: ayuda
+french: aide
+german: hilfe
+tagalog: tulong
+italian: aiuto
+japanese: tasukete
+korean: dowajuseyo
+chinese: bangzhu
+
+english: friend
+spanish: amigo
+french: ami
+german: freund
+tagalog: kaibigan
+italian: amico
+japanese: tomodachi
+korean: chingu
+chinese: pengyou
+
+english: family
+spanish: familia
+french: famille
+german: familie
+tagalog: pamilya
+italian: famiglia
+japanese: kazoku
+korean: gajok
+chinese: jiating
+
+english: home
+spanish: casa
+french: maison
+german: haus
+tagalog: bahay
+italian: casa
+japanese: ie
+korean: jib
+chinese: jia
+
+english: work
+spanish: trabajo
+french: travail
+german: arbeit
+tagalog: trabaho
+italian: lavoro
+japanese: shigoto
+korean: il
+chinese: gongzuo
+
+english: school
+spanish: escuela
+french: ecole
+german: schule
+tagalog: paaralan
+italian: scuola
+japanese: gakkou
+korean: hakgyo
+chinese: xuexiao
+
+english: book
+spanish: libro
+french: livre
+german: buch
+tagalog: aklat
+italian: libro
+japanese: hon
+korean: chaek
+chinese: shu
