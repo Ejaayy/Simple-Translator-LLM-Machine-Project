@@ -1,6 +1,6 @@
-
 char getChoice(char choice) {
     int validChoice = 0;
+    char temp;
 
     while (!validChoice) 
 	{
@@ -8,7 +8,7 @@ char getChoice(char choice) {
 
         if (scanf(" %c", &choice) == 1) 
 		{ // Read character input
-            while (getchar() != '\n'); // Clear input buffer
+            while ((temp = getchar()) != '\n' && temp != EOF);  // Clear input buffer
 
             choice = tolower(choice); // Convert to lowercase
             
@@ -20,7 +20,9 @@ char getChoice(char choice) {
 			{
                 printf("Invalid input. ");
             }
-        } 
+        }
+		else
+			while ((temp = getchar()) != '\n' && temp != EOF);  
     }
     return choice;
 }
@@ -120,6 +122,27 @@ void inputWord(char sentence[])
     sentence[i] = '\0'; // Null-terminate the string
 }
 
+void inputFileName(char sentence[]) 
+{
+    int i = 0;
+    char ch;
+
+    // Skip any leading newline or spaces left in the input buffer
+    while ((ch = getchar()) == '\n' || ch == ' ');
+
+    do {
+        sentence[i] = ch;  // Store the character in the array
+        i++;
+        if(ch == '\n'){
+        	printf("Invalid input. Must contain at least one character.\n");
+		}
+        ch = getchar();  // Read the next character
+
+    } while (i < MAX_FILENAME && ch != '\n'); // Stop condition
+    
+    sentence[i] = '\0'; // Null-terminate the string
+}
+
 // Function to get language-translation pair
 void getLanguageTranslation(char language[], char translation[])
 {
@@ -175,7 +198,7 @@ void addEntry(entryType *entries, int *countEntry)
             getLanguageTranslation(language, translation);
             
             // Check for duplicates across all entries
-            matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes, -1);
+            matchCount = isDuplicate(entries, *countEntry, language, translation, matchedIndexes, -1); //Try to change -1 to a flag that it is only one single entry there is to check
 
             if (matchCount > 0)
             {
@@ -442,13 +465,14 @@ void displayAllEntries(entryType *entry, int countEntry)
 
 void displayModeAllEntries(entryType entry[], int countEntry)
 {
+	int j;
 	if(!countEntryIsZero(countEntry))
 		printf("No entries available to display.\n");
 	
 	else
 	{
 		int i = 0; // Current index
-	    char choice;
+	    char choice, temp;
 	    sortEntry(entry, countEntry); // Sort everything
 	
 	    printf("You are now in Display View Mode.\n");
@@ -472,7 +496,7 @@ void displayModeAllEntries(entryType entry[], int countEntry)
 		{
 	        // Print the current entry
 	        printf("\nEntry %d:\n", i + 1);
-	        for (int j = 0; j < entry[i].pairCount; j++) 
+	        for (j = 0; j < entry[i].pairCount; j++) 
 			{
 	            printf("%d.Language: %-15s Translation: %s\n", j+1, entry[i].pair[j].lang, entry[i].pair[j].trans);
 	        }
@@ -480,6 +504,7 @@ void displayModeAllEntries(entryType entry[], int countEntry)
 	        // Ask for user input
 	        printf("\nEnter Choice (N/P/X): ");
 	        scanf(" %c", &choice); // Added a space before %c to handle previous newlines
+	        while ((temp = getchar()) != '\n' && temp != EOF);
 	
 	        // Handle navigation
 	        if (choice == 'N' || choice == 'n') 
@@ -715,94 +740,183 @@ void searchTranslation(entryType *entries, int countEntry)
 void exportFile(entryType *entries, int countEntry)
 {
 	FILE *ptr;
+	Str30 fileName;
 	int i,j;
-	ptr = fopen("testnialingnena.txt","w");
-	sortEntry(entries,countEntry);
-	for(i=0; i<countEntry;i++){
-		fprintf(ptr,"Entry: %d\n",i+1);
-	    for (j = 0; j < entries[i].pairCount; j++) {
-            fprintf(ptr, "%d.Language: %-15s Translation: %s\n", j+1, entries[i].pair[j].lang, entries[i].pair[j].trans);
-        }
-		fprintf(ptr,"\n");
+	int flag = 1;
+	
+	printf("Please enter the filename of the text file you want to import (e.g., filename.txt): ");
+	inputFileName(fileName);
+    
+	ptr = fopen(fileName,"w");
+	if (ptr == NULL) 
+	{
+        printf("Error opening file. Please check the file and try again.\n");
+        flag = 0;
+    }
+    if (flag)
+	{
+		sortEntry(entries,countEntry);
+		for(i = 0; i < countEntry; i++)
+		{
+		    for (j = 0; j < entries[i].pairCount; j++) 
+			{
+	             fprintf(ptr, "%s: %s\n", entries[i].pair[j].lang, entries[i].pair[j].trans);
+	        }
+			fprintf(ptr,"\n");
+		}
+		fclose(ptr);
 	}
-
-	fclose(ptr);
-	printf("Successfully exported to testingnialingnena.txt! Redirecting back to Manage Data menu.\n");
+	
+	printf("Successfully exported to %s! Redirecting back to Manage Data menu.\n", fileName);
 }
 
-
-void importFile(entryType *entries, int *countEntry) {
+void importFile(entryType *entries, int *countEntry) 
+{
     FILE *ptr;
-    Str20 filename;
+    Str30 fileName;
+    Str20 tempLang, tempTrans, extraLang[MAX_PAIRS], extraTrans[MAX_PAIRS];
     char buffer[MAX_LETTER * 2];
     entryType tempEntry;
     int entryFileNumber = 0;
     char choice;
-    int flag =1;
+    int flag = 1;
+    int i;
+    int extraPairCount = 0;
+    int stopProcessing = 0;
     
     // Ask the user for the filename
     printf("Please enter the filename of the text file you want to import (e.g., filename.txt): ");
-    inputWord(filename);
+    inputFileName(fileName);
 
     // Open the file for reading
-    ptr = fopen(filename, "r");
-    if (ptr == NULL) {
+    ptr = fopen(fileName, "r");
+    if (ptr == NULL) 
+	{
         printf("Error opening file. Please check the file and try again.\n");
         flag = 0;
     }
-	if (flag){
+    if (flag && fgetc(ptr) == EOF) 
+	{
+	    printf("The file is empty. Please provide a valid file. Redirecting back to Manage Data menu.\n");
+	    flag = 0;
+	}
+	
+	// If MAX_ENTRY is already reached, stop immediately
+    if (*countEntry >= MAX_ENTRY) 
+    {
+        printf("Entry limit reached (%d). Stopping import. Redirecting back to Manage Data menu.\n", MAX_ENTRY);
+        flag = 0;
+    }
+	if (flag)
+	{
+		rewind(ptr);  //Reset file pointer before reading
 		
 	    // Read each line from the file
-	    while (fgets(buffer, sizeof(buffer), ptr) != NULL) { //reads one line now
-	        
-	        // Check if the line is empty, indicating a new entry
-	        if (buffer[0] == '\n') {
-	            entryFileNumber++; // Increment entry count
-	            printf("Detected an Entry. Now displaying Entry #%d from the file:\n", entryFileNumber);
-	            
-	            // Display all translation pairs for this entry
-	            for (int i = 0; i < tempEntry.pairCount; i++) {
-	                printf("%s %s\n", tempEntry.pair[i].lang, tempEntry.pair[i].trans);
-	            }
-	            
-	            // Ask the user whether to add this entry
-	            printf("Do you want to add this entry? (y/n): ");
-	            choice = getChoice(choice);
-	            if (choice == 'y') {
-	                entries[*countEntry] = tempEntry; // Store entry in database
-	                (*countEntry)++; // Increment entry count
-	            }
-	            
-	            tempEntry.pairCount = 0; // Reset for the next entry
-	        } 
-	        else { //process the current entry
-	        
-	        	//copies pair directly to the tempEntry
-	        	// %[^\n] means it will scan everything after space until new line
-	            sscanf(buffer, "%s %[^\n]", tempEntry.pair[tempEntry.pairCount].lang, tempEntry.pair[tempEntry.pairCount].trans);
-	            tempEntry.pairCount++; // Increment pair count within the current entry
-	        }
+	    while (fgets(buffer, sizeof(buffer), ptr) != NULL) 
+		{ //reads one line now
+		
+			if (*countEntry >= MAX_ENTRY) 
+            {
+                printf("Entry limit reached (%d). Stopping import. Redirecting back to Manage Data menu.\n", MAX_ENTRY);
+                stopProcessing = 1; // Set flag to stop further processing
+            }
+            
+            if (!stopProcessing)
+            {
+	            // Check if the line is empty, indicating a new entry
+		        if (buffer[0] == '\n') 
+				{
+		            entryFileNumber++; // Increment entry count
+		            printf("Detected an Entry. Now displaying Entry #%d from the file:\n", entryFileNumber);
+		            
+		            // Display all translation pairs for this entry
+		            for (i = 0; i < tempEntry.pairCount; i++) 
+					{
+		            	printf("%d.Language: %-15s Translation: %s\n", i+1, tempEntry.pair[i].lang, tempEntry.pair[i].trans);
+		            }
+		            
+		            for (i = 0; i < extraPairCount; i++)
+		            {
+		            	printf("%d.Language: %-15s Translation: %s\n", tempEntry.pairCount + 1 + i, extraLang[i], extraTrans[i]);
+					}
+		            
+		            // Ask the user whether to add this entry
+		            if (tempEntry.pairCount < MAX_PAIRS)
+		            {
+		            	printf("Do you want to add this entry? (y/n): ");
+		            	choice = getChoice(choice);
+		            	if (choice == 'y') 
+						{
+		                	entries[*countEntry] = tempEntry; // Store entry in database
+		                	(*countEntry)++; // Increment entry count
+		            	}
+					}
+					else
+			        {
+			            printf("Skipping this entry because it exceeded the maximum number of pairs (%d).\n", MAX_PAIRS);
+			        }
+		            tempEntry.pairCount = 0; // Reset for the next entry
+		            extraPairCount = 0; // Reset for the next entry
+		        } 
+		        else 
+				{ //process the current entry
+		        	//copies pair directly to the tempEntry
+		        	// %[^\n] means it will scan everything after space until new line
+		        	sscanf(buffer, "%[^:]: %[^\n]", tempLang, tempTrans);
+		        	if (tempEntry.pairCount < MAX_PAIRS)
+			        {
+			        	strcpy(tempEntry.pair[tempEntry.pairCount].lang, tempLang);
+			        	strcpy(tempEntry.pair[tempEntry.pairCount].trans, tempTrans);
+			            tempEntry.pairCount++; // Increment pair count
+			        }
+			        else if (extraPairCount < MAX_PAIRS) //limit to 10 extra pairs
+			        {
+			            // copying of extra pairs
+			            strcpy(extraLang[extraPairCount], tempLang);
+			            strcpy(extraTrans[extraPairCount], tempTrans);
+			            extraPairCount++;
+			        }
+		        }
+			}
 	    }
-	 
 	    // Process the last entry since the current algo is design to scan first to tempEntry then check if user wants to add
 	    //but in the last entry case, we cant check for \n
-	    entryFileNumber++;
-	    printf("Detected an Entry. Now displaying Entry #%d from the file:\n", entryFileNumber);
-	        
-	    for (int i = 0; i < tempEntry.pairCount; i++) {
-	        printf("%s %s\n", tempEntry.pair[i].lang, tempEntry.pair[i].trans);
-	    }
-	        
-	    printf("Do you want to add this entry? (y/n): ");
-	    choice = getChoice(choice);
-	    if (choice == 'y') {
-	        entries[*countEntry] = tempEntry;
-	        (*countEntry)++;
-	    }
-	
-	    // Close the file after reading
-	    fclose(ptr);		
+	    
+	    if(!stopProcessing && *countEntry < MAX_ENTRY)
+	    {
+		    entryFileNumber++; // Increment entry count
+            printf("Detected an Entry. Now displaying Entry #%d from the file:\n", entryFileNumber);
+            
+            // Display all translation pairs for this entry
+            for (i = 0; i < tempEntry.pairCount; i++) 
+			{
+            	printf("%d.Language: %-15s Translation: %s\n", i+1, tempEntry.pair[i].lang, tempEntry.pair[i].trans);
+            }
+            
+            for (i = 0; i < extraPairCount; i++)
+            {
+            	printf("%d.Language: %-15s Translation: %s\n", tempEntry.pairCount + 1 + i, extraLang[i], extraTrans[i]);
+			}
+            
+            // Ask the user whether to add this entry
+            if (tempEntry.pairCount < MAX_PAIRS)
+            {
+            	printf("Do you want to add this entry? (y/n): ");
+            	choice = getChoice(choice);
+            	if (choice == 'y' && *countEntry < MAX_ENTRY) 
+				{
+                	entries[*countEntry] = tempEntry; // Store entry in database
+                	(*countEntry)++; // Increment entry count
+            	}
+			}
+			else
+	        {
+	            printf("Skipping this entry because it exceeded the maximum number of pairs (%d).\n", MAX_PAIRS);
+	        }
+		}
 	}
+	// Close the file after reading	
+	fclose(ptr);
 }
 
 int exitFunction()
@@ -840,8 +954,7 @@ int displayManageDataMenu()
 
         if (scanf("%d", &choice) != 1)
         {
-            while (getchar() != '\n')
-                ; // Clear input buffer
+            while (getchar() != '\n'); // Clear input buffer
             printf("Invalid input! Please enter a number between 1 and 10.\n");
             choice = 0;
         }
@@ -908,4 +1021,3 @@ int displayMainMenu()
 	}while (choice < 1 || choice > 3);
 	return choice;	
 }
-
