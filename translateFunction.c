@@ -1,4 +1,5 @@
-int filterWords(char *textInput, Str20 filteredWords[]) {
+int filterWords(char *textInput, Str20 filteredWords[]) 
+{
     int wordCount = 0;       
     Str20 word = {0};        
     int letterIndex = 0;      
@@ -47,9 +48,8 @@ void printFilteredWords(Str20 filteredWords[], int wordCount)
     }
 }
 
-char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str20 sourceLanguage, Str20 outputLanguage) 
-{
-    static Str20 translatedWord = {0}; 
+void translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str20 sourceLanguage, Str20 outputLanguage, Str20 translatedWord) 
+{ 
     int matchedIndexes[MAX_WORDS];        
     int matchPairCount;
     int i, j;
@@ -83,149 +83,152 @@ char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str
             strcpy(translatedWord, entries[matchedIndexes[i - 1]].pair[foundIndex].trans);
         }
     }
-
-    return translatedWord;
 }
 
 void translateTextInput(entryType *entries, int countEntry) {
 	
-	char sourceText[151] = {0};  // Assume text is at most 150 characters
-	char choice = 'y';
-	Str20 sourceLanguage;
-	Str20 outputLanguage;
-	Str20 filteredWords[MAX_WORDS];  // Array to store filtered words
-	Str20 translatedWords[MAX_WORDS];  // Array to store filtered words
-	Str20 tempTranslation;
-	int wordCount = 0;  // Tracks number of filtered words
-	int i;
+    char sourceText[MAX_CHARACTERS + 1] = {0};  // Assume text is at most 150 characters
+    char choice = 'y';
+    Str20 sourceLanguage;
+    Str20 outputLanguage;
+    Str20 filteredWords[MAX_WORDS];  // Array to store filtered words
+    Str20 translatedWords[MAX_WORDS];  // Array to store translated words
+    Str20 tempTranslation;
+    int wordCount = 0;  // Tracks number of filtered words
+    int i;
+    int validInput;
 
-	do {
-		// Ask for source language
-		printf("What language is the source text you're going to input you bitch?: ");
-		inputWord(sourceLanguage);
-		
-		// Ask for target language
-		printf("What language are you translating it into you bitch?: ");
-		inputWord(outputLanguage);
-		
-		// Ask for text input
-		printf("You are going to translate from %s to %s.\n", sourceLanguage, outputLanguage);
-		printf("Input text to be translated: ");
-		fgets(sourceText, 151, stdin);	
-		
-		// Filter words directly into an array
-		wordCount = filterWords(sourceText, filteredWords);
+    do {
+        // Ask for source language
+        printf("Enter the source language: ");
+        inputWord(sourceLanguage);
+        
+        // Get valid input that is at most 150 characters
+        do {
+            validInput = 1; // Assume input is valid
+            printf("Enter the text to be translated (max 150 characters): ");
+            
+            // 
+            fgets(sourceText, MAX_CHARACTERS + 1, stdin);
 
-		// Display filtered words for confirmation
-		printf("\nWords in %s: ", sourceLanguage);
-		for (i = 0; i < wordCount; i++) 
-		{
-			printf("%s ", filteredWords[i]);
-		}
-		printf("\n");
-		//can use special case wherein the last word wont include an additional space anymore
+            // check if input exceeds 150 characters
+            if (strlen(sourceText) > MAX_CHARACTERS) {
+                printf("Error: Text exceeds 150 characters. Please enter a shorter sentence.\n");
+                validInput = 0; // mark input as invalid
+                while (getchar() != '\n'); // clear excess input from buffer
+            }
+        } while (!validInput);
 
-		// Translation logic using filteredWords array
-		for (i = 0; i < wordCount; i++) 
-		{  //Translate inputted words to desired translation of the user
-			tempTranslation[0] = '\0';
-			strcpy(tempTranslation, translateWord(entries, countEntry, filteredWords[i], sourceLanguage, outputLanguage));
-			strcpy(translatedWords[i], tempTranslation); //Stored in the translatedWords
-		}
+        // remove newline character if present to prevent formatting issues
+        sourceText[strcspn(sourceText, "\n")] = '\0';	
+        
+        // Ask for target language
+        printf("Enter the language to translate into: ");
+        inputWord(outputLanguage);
+        
+        // Confirm input details
+        printf("\nYou are translating from %s to %s.\n", sourceLanguage, outputLanguage);
 
-		printf("\nWords in %s: ", outputLanguage);
-		for (i = 0; i < wordCount; i++) 
-		{
-			printf("%s ", translatedWords[i]);
-		}
-		printf("\n");
-		//can use special case wherein the last word wont include an additional space anymore
-		
-		// Ask if the user wants to continue
-		printf("Do you want to translate more text? (y/n): ");
-		choice = getChoice(choice);
+        // Tokenization: filter words from input
+        wordCount = filterWords(sourceText, filteredWords);
 
-	} while (choice == 'y' || choice == 'Y');
+        // Display filtered words for confirmation
+        printf("\nWords in %s: ", sourceLanguage);
+        for (i = 0; i < wordCount; i++) {
+            printf("%s ", filteredWords[i]);
+        }
+        printf("\n");
+
+        // Translation logic using filteredWords array
+        for (i = 0; i < wordCount; i++) {  
+            tempTranslation[0] = '\0';
+            translateWord(entries, countEntry, filteredWords[i], sourceLanguage, outputLanguage, tempTranslation);
+            strcpy(translatedWords[i], tempTranslation); // Store in translatedWords array
+        }
+
+        // Display translated words
+        printf("\nTranslated words in %s: ", outputLanguage);
+        for (i = 0; i < wordCount; i++) {
+            printf("%s", translatedWords[i]);
+            if (i < wordCount - 1) {
+                printf(" ");  // Avoid extra space at the end
+            }
+        }
+        printf("\n");
+
+        // Ask if the user wants to continue
+        printf("\nDo you want to translate more text? (y/n): ");
+        choice = getChoice(choice);
+
+    } while (choice == 'y' || choice == 'Y');
 }
 
 // Function to translate a single sentence
-void translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[], char translatedSentence[]){
-    char word[MAX_LETTER] = {0};
+void translateSentence(entryType entries[], int countEntry, char* sentence, 
+                       char sourceLanguage[], char outputLanguage[], char* translatedSentence) {
+    char word[MAX_LETTER] = {0};  
+    char tempTranslation[MAX_LETTER] = {0}; 
     int wordIndex = 0, translatedIndex = 0;
-    Str20 translatedWord;
+    char punctuation = '\0'; // Store punctuation
     int i;
-    
-    translatedSentence[0] = '\0'; // Reset buffer
 
-    for (i = 0; sentence[i] != '\0'; i++) 
-	{
-        if ((sentence[i] == ' ') || (sentence[i] == '.') || (sentence[i] == '?') || (sentence[i] == '!')) 
-		{
-            if (wordIndex > 0) //processes the word
-			{
-                word[wordIndex] = '\0';
-                strcpy(translatedWord, translateWord(entries, countEntry, word, sourceLanguage, outputLanguage));
-                if (translatedWord != NULL) 
-				{
-                    strcpy(translatedSentence + translatedIndex, translatedWord);
-                    translatedIndex += strlen(translatedWord);
+    for (i = 0; sentence[i] != '\0'; i++) { 
+        // Detect punctuation (excluding spaces)
+        if (sentence[i] == ',' || sentence[i] == '.' || sentence[i] == '?' || sentence[i] == '!') {
+            punctuation = sentence[i]; // Store punctuation separately
+        } 
+        
+        // Word separator (space or punctuation)
+        if (sentence[i] == ' ' || punctuation != '\0') {  
+            if (wordIndex > 0) {
+                word[wordIndex] = '\0';  // Null-terminate the word
+                translateWord(entries, countEntry, word, sourceLanguage, outputLanguage, tempTranslation);
+
+                // Append translated word to the sentence
+                strcpy(translatedSentence + translatedIndex, tempTranslation);
+                translatedIndex += strlen(tempTranslation);
+
+                // Restore punctuation after translation
+                if (punctuation != '\0') {
+                    translatedSentence[translatedIndex++] = punctuation;
+                    punctuation = '\0'; // Reset after use
+                    
+                    // ? Ensure a space is added after punctuation
+                    if (sentence[i + 1] != ' ' && sentence[i + 1] != '\0') { 
+                        translatedSentence[translatedIndex++] = ' ';
+                    }
                 }
-                wordIndex = 0;
             }
-    
-            if ((sentence[i] == '.') || (sentence[i] == '?') || (sentence[i] == '!')) //processes the punctuation mark
-			{
-                translatedSentence[translatedIndex++] = sentence[i];
-                translatedSentence[translatedIndex++] = '\n'; // Force newline
-                while (sentence[i + 1] == ' ') 
-					i++;
-            }
-            else if (translatedIndex > 0 && translatedSentence[translatedIndex - 1] != ' ') 
-			{
+
+            // ? Ensure space is added only if it’s not right after punctuation
+            if (sentence[i] == ' ' && translatedSentence[translatedIndex - 1] != ' ') {
                 translatedSentence[translatedIndex++] = ' ';
             }
-    	} 
-		else 
-		{
+
+            wordIndex = 0; // Reset for the next word
+        } 
+        // Store normal characters in `word[]`
+        else {
             word[wordIndex++] = sentence[i];
         }
     }
-
-    // Process last word
-    if (wordIndex > 0) 
-	{
-        word[wordIndex] = '\0';
-        strcpy(translatedWord, translateWord(entries, countEntry, word, sourceLanguage, outputLanguage));
-        if (translatedWord) 
-		{
-            strcpy(translatedSentence + translatedIndex, translatedWord);
-            translatedIndex += strlen(translatedWord);
-        }
-    }
-
-    // Trim trailing space/newline
-    if (translatedIndex > 0) 
-	{
-        if (translatedSentence[translatedIndex - 1] == ' ') translatedIndex--;
-        if (translatedSentence[translatedIndex - 1] == '\n') translatedIndex--;
-    }
-    translatedSentence[translatedIndex] = '\0';
+    translatedSentence[translatedIndex] = '\0'; // Null-terminate the final translation
 }
 
-// Function to process text files
 void translateTextFile(entryType *entries, int countEntry) {
-	int i;
     Str20 sourceFile, outputLanguage, sourceLanguage, outputFile;
-    char buffer[151] = {0};
-    char sentenceBuffer[10][151] = {0};
-    char translated[10][151] = {0};
-
-    printf("What is the file you are going to translate: ");
-    inputWord(sourceFile);    
-    printf("What language is this text file in?: ");
+    int flag = 1;
+    
+    // Get file names
+    printf("What language is the text file in?: ");
     inputWord(sourceLanguage);  
+    
+    printf("What is the name of the file you are going to translate: ");
+    inputWord(sourceFile);    
+    
     printf("What language are you translating it into?: ");
     inputWord(outputLanguage);    
+    
     printf("Where do we output this file: ");
     inputWord(outputFile);    
 
@@ -233,55 +236,74 @@ void translateTextFile(entryType *entries, int countEntry) {
     FILE *ptrOutputFile = fopen(outputFile, "w");
 
     if (!ptrSourceFile || !ptrOutputFile) {
-        printf("Error opening files!\n");
-        if (ptrSourceFile) 
-			fclose(ptrSourceFile);
-        if (ptrOutputFile) 
-			fclose(ptrOutputFile);
-        return;
+        printf("Error opening file.\n");
+        flag = 0;
     }
 
-    while (fgets(buffer, sizeof(buffer), ptrSourceFile)) {
-        int sentenceNum = 0, bufferIdx = 0;
+    if (flag) {
+        char bufferSentence[MAX_CHARACTERS + 1] = {0};  
+        int sentenceIndex = 0;
+        char word[MAX_LETTER];
+        int i;
+        char lastChar = '\0'; // track last added character
+        int skipSentence = 0; // flag to skip processing
 
-        // Split into sentences with proper trimming
-        while (buffer[bufferIdx] && sentenceNum < 10) {
-            // Skip leading whitespace
-            while (isspace(buffer[bufferIdx])) bufferIdx++;
-            
-            int sentencePos = 0;
-            while (buffer[bufferIdx] && sentencePos < 150) {
-                char c = buffer[bufferIdx];
-                if (strchr(".?!", c)) {
-                    sentenceBuffer[sentenceNum][sentencePos++] = c;
-                    bufferIdx++;
-                    // Skip trailing spaces after punctuation
-                    while (isspace(buffer[bufferIdx])) bufferIdx++;
-                    break;
+        // read words from file
+        while (fscanf(ptrSourceFile, "%s", word) != EOF) {
+            int spaceFlag = 0;
+
+            for (i = 0; word[i] != '\0'; i++) {
+                // if sentence is too long
+                if (sentenceIndex >= MAX_CHARACTERS) {
+                    printf("Error: Sentence exceeds 150 characters. Skipping: %s...\n", bufferSentence);
+                    skipSentence = 1;  // set flag to skip
                 }
-                sentenceBuffer[sentenceNum][sentencePos++] = c;
-                bufferIdx++;
+
+                // only store if sentence is within limits
+                if (!skipSentence) {
+                    bufferSentence[sentenceIndex++] = word[i];
+                    lastChar = word[i];
+                }
+
+                // check if it's the end of a sentence
+                if (word[i] == '.' || word[i] == '?' || word[i] == '!') {
+                    bufferSentence[sentenceIndex] = '\0';
+
+                    // only translate if sentence is valid
+                    if (!skipSentence) {
+                        char translatedSentence[MAX_CHARACTERS + 1] = {0};
+                        translateSentence(entries, countEntry, bufferSentence, sourceLanguage, outputLanguage, translatedSentence);
+                        printf("Translated sentence: %s\n", translatedSentence);
+                        fprintf(ptrOutputFile, "%s\n", translatedSentence);
+                    }
+
+                    // reset for next sentence
+                    sentenceIndex = 0;
+                    lastChar = '\0';
+                    skipSentence = 0;  // reset skip flag
+                }
             }
-            
-            // Trim trailing whitespace
-            while (sentencePos > 0 && isspace(sentenceBuffer[sentenceNum][sentencePos - 1])) {
-                sentencePos--;
+
+            // ensure spaces are only added between words, not after punctuation
+            if (!skipSentence && spaceFlag == 0 && sentenceIndex < MAX_CHARACTERS) {
+                if (lastChar != ',' && lastChar != '.' && lastChar != '?' && lastChar != '!' && lastChar != ' ') { 
+                    bufferSentence[sentenceIndex++] = ' ';
+                    lastChar = ' ';
+                }
             }
-            sentenceBuffer[sentenceNum][sentencePos] = '\0';
-            
-            if (sentencePos > 0) sentenceNum++;
         }
 
-        // Translate and write sentences
-        for (i = 0; i < sentenceNum; i++) {
-            if (strlen(sentenceBuffer[i]) == 0) 
-				continue;
-            translateSentence(entries, countEntry, sentenceBuffer[i], sourceLanguage, outputLanguage, translated[i]);
-            fprintf(ptrOutputFile, "%s\n", translated[i]);
+        // process the last sentence if it didn't end with punctuation
+        if (sentenceIndex > 0 && !skipSentence) {
+            bufferSentence[sentenceIndex] = '\0';
+
+            char translatedSentence[MAX_CHARACTERS + 1] = {0};
+            translateSentence(entries, countEntry, bufferSentence, sourceLanguage, outputLanguage, translatedSentence);
+            printf("Translated sentence: %s\n", translatedSentence);
+            fprintf(ptrOutputFile, "%s\n", translatedSentence);
         }
+
+        fclose(ptrSourceFile);
+        fclose(ptrOutputFile);
     }
-
-    fclose(ptrSourceFile);
-    fclose(ptrOutputFile);
-    printf("Translation complete!\n");
 }
