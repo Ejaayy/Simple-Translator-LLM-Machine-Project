@@ -8,12 +8,13 @@
 #define MAX_LETTER 20 // Max length for words
 #define MAX_PAIRS 10  // Max language-translation pairs per entry
 #define MAX_ENTRY 150 // Max dictionary entries
-#define MAX_WORDS 50 //gawa gawa ko lang
+#define MAX_CHARACTERS 150
+#define MAX_WORDS 75 //gawa gawa ko lang
+#define MAX_SENTENCES 50
 #define MAX_FILENAME 30
 
-
 typedef char Str20[MAX_LETTER + 1]; // String type (20 characters + null terminator)
-typedef char Str30[MAX_FILENAME + 1]; 
+typedef char Str30[MAX_FILENAME + 1];
 
 // Structures
 typedef struct translationPairTag
@@ -31,7 +32,6 @@ typedef struct entryTag
 char getChoice(char choice);
 void toLowerString(char *str);
 void inputWord(char sentence[]);
-void inputFileName(char sentence[]);
 void updateLanguageTranslationPair(entryType *entry, Str20 language, Str20 translation);
 void showMatchedEntries(entryType entries[], int matchedIndexes[], int matchCount);
 int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 translate, int matchedIndexes[], int currentEntryIndex); //Can be revised into isDuplicateLangTransPair
@@ -53,9 +53,9 @@ int displayMainMenu();
 
 int filterWords(char *textInput, Str20 filteredWords[]);
 void printFilteredWords(Str20 filteredWords[], int wordCount);
-char* translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str20 sourceLanguage, Str20 outputLanguage);
+void translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str20 sourceLanguage, Str20 outputLanguage, Str20 translatedWord);
 void translateTextInput(entryType *entries, int countEntry);
-void translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[], char translatedSentence[]);
+void translateSentence(entryType entries[], int countEntry, char* sentence, char sourceLanguage[], char outputLanguage[], char* translatedSentence);
 void translateTextFile(entryType *entries, int countEntry);
 #include "MP2.c"
 #include "translateFunction.c"
