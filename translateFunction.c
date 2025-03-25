@@ -289,6 +289,7 @@ void translateTextFile(entryType *entries, int countEntry) {
                 if (lastChar != ',' && lastChar != '.' && lastChar != '?' && lastChar != '!' && lastChar != ' ') { 
                     bufferSentence[sentenceIndex++] = ' ';
                     lastChar = ' ';
+                    spaceFlag = 1;
                 }
             }
         }
