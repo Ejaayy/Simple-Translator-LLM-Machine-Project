@@ -29,9 +29,8 @@ typedef struct entryTag
   int pairCount; // how many translation pair there is in an entry
 } entryType;
 
-char getChoice(char choice);
-void toLowerString(char *str);
-void inputWord(char sentence[]);
+char getChoice();
+void inputString(char sentence[], int MAX);
 void updateLanguageTranslationPair(entryType *entry, Str20 language, Str20 translation);
 void showMatchedEntries(entryType entries[], int matchedIndexes[], int matchCount);
 int isDuplicate(entryType entries[], int countEntry, Str20 language, Str20 translate, int matchedIndexes[], int currentEntryIndex); //Can be revised into isDuplicateLangTransPair
@@ -39,7 +38,7 @@ void getLanguageTranslation(Str20 language, Str20 translation);
 int countEntryIsZero(int countEntry);
 void addEntry(entryType *entries, int *countEntry);
 void addTranslation(entryType *entries, int *countEntry);
-void displayModeAllEntries(entryType entry[], int countEntry);
+void displayAllEntries(entryType entry[], int countEntry);
 void deleteEntry(entryType entries[], int *countEntry);
 void deleteTranslation(entryType *entries, int *countEntry);
 void searchWord(entryType *entries, int countEntry);
