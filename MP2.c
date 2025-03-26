@@ -38,7 +38,7 @@ char getChoice() {
  * @param language - the language of the new pair.
  * @param translation - the corresponding translation.
  * @return void
- * Pre-condition: entry->pairCount ≤ 10 (Max limit of translation pairs per entry).
+ * Pre-condition: entry->pairCount = 10 (Max limit of translation pairs per entry).
  * Post-condition: If not full, a new language-translation pair is added, and pairCount is incremented.
  *                 If full, displays an error message and does not add the pair.
  */
@@ -97,7 +97,7 @@ void showMatchedEntries(entryType entries[], int matchedIndexes[], int matchCoun
  * @param currentEntryIndex - entry index to check (-1 to check all entries).
  * @return int - number of entries where the language-translation pair was found.
  *
- * Pre-condition: countEntry ≥ 0, matchedIndexes is an empty array of sufficient size.
+ * Pre-condition: countEntry = 0, matchedIndexes is an empty array of sufficient size.
  * Post-condition: matchedIndexes contains indexes of entries with duplicate pairs.
  */
  
@@ -965,86 +965,86 @@ int exitFunction()
 
 int displayManageDataMenu()
 {
-    int choice;
-    
-    do
-    {
-        printf("\n===== MANAGE DATA MENU =====\n");
-        printf("1. Add Entry\n");
-        printf("2. Add Translations\n");
-        printf("3. Delete Entry\n");
-        printf("4. Delete Translation\n");
-        printf("5. Display All Entries\n");
-        printf("6. Search Word\n");
-        printf("7. Search Translation\n");
-        printf("8. Export\n");
-        printf("9. Import\n");
-        printf("10. Exit\n");
-        printf("Enter your choice: ");
-
-        if (scanf(" %d", &choice) != 1 || getchar() != '\n') 
-        {
-
-            printf("Invalid input! Please enter a number between 1 and 10.\n");
-            choice = 0;
-        }
-        else if (choice < 1 || choice > 10)
-        {
-            printf("Invalid choice! Please enter a number between 1 and 10.\n");
-        }
-
-    } while (choice < 1 || choice > 10);
-
-    return choice;
+     int choice;
+     char trash;
+     do
+     {
+         printf("\n===== MANAGE DATA MENU =====\n");
+         printf("1. Add Entry\n");
+         printf("2. Add Translations\n");
+         printf("3. Delete Entry\n");
+         printf("4. Delete Translation\n");
+         printf("5. Display All Entries\n");
+         printf("6. Search Word\n");
+         printf("7. Search Translation\n");
+         printf("8. Export\n");
+         printf("9. Import\n");
+         printf("10. Exit\n");
+         printf("Enter your choice: ");
+ 
+         if (scanf(" %d%c", &choice, &trash) != 2)
+         {
+             printf("Invalid input! Please enter a number between 1 and 10.\n");
+             choice = 0;
+         }
+         else if (choice < 1 || choice > 10)
+         {
+             printf("Invalid choice! Please enter a number between 1 and 10.\n");
+         }
+ 
+     } while (choice < 1 || choice > 10);
+ 
+     return choice;
 }
-
-int translateMenu()
-{
-    int choice;
-    do
-    {
-        printf("\n===== TRANSLATE MENU =====\n");
-        printf("1. Translate Text Input\n");
-        printf("2. Translate Text File\n");
-        printf("3. Exit\n");
-        printf("Enter your choice: ");
-
-        if (scanf(" %d", &choice) != 1 || getchar() != '\n') 
-        {
-            printf("Invalid input! Please enter a number between 1 and 3.\n");
-            choice = 0;
-        }
-        else if (choice < 1 || choice > 3)
-        {
-            printf("Invalid choice! Please enter a number between 1 and 3.\n");
-        }
-
-    } while (choice < 1 || choice > 3);
-
-    return choice;
-}
-
-int displayMainMenu()
-{		
-	int choice;
-	do
-	{
-	    printf("\n===== TRANSLATOR NI ALING NENA =====\n");
-	    printf("1. Manage Data Menu\n");
-	    printf("2. Translate Menu\n");
-	    printf("3. Exit\n");
-	    printf("Enter your choice: ");
-
-	    if (scanf(" %d", &choice) != 1 || getchar() != '\n') 
-	    {
-
-	      printf("Invalid input! Please enter a number between 1 and 3.\n");
-	      choice = 0;
-	    }
-	    else if (choice < 1 || choice > 3)
-	    {
-	      printf("Invalid choice! Please enter a number between 1 and 3.\n");
-	    }
-	}while (choice < 1 || choice > 3);
-	return choice;	
-}
+ 
+ int translateMenu()
+ {
+     int choice;
+     char trash;
+     do
+     {
+         printf("\n===== TRANSLATE MENU =====\n");
+         printf("1. Translate Text Input\n");
+         printf("2. Translate Text File\n");
+         printf("3. Exit\n");
+         printf("Enter your choice: ");
+ 
+         if (scanf(" %d%c", &choice, &trash) != 2)
+         {
+             printf("Invalid input! Please enter a number between 1 and 10.\n");
+             choice = 0;
+         }
+         else if (choice < 1 || choice > 10)
+         {
+             printf("Invalid choice! Please enter a number between 1 and 10.\n");
+         }
+ 
+     } while (choice < 1 || choice > 3);
+ 
+     return choice;
+ }
+ 
+ int displayMainMenu()
+ {		
+ 	int choice;
+ 	char trash;
+ 	do
+ 	{
+ 	    printf("\n===== TRANSLATOR NI ALING NENA =====\n");
+ 	    printf("1. Manage Data Menu\n");
+ 	    printf("2. Translate Menu\n");
+ 	    printf("3. Exit\n");
+ 	    printf("Enter your choice: ");
+ 
+         if (scanf(" %d%c", &choice, &trash) != 2)
+         {
+             printf("Invalid input! Please enter a number between 1 and 10.\n");
+             choice = 0;
+         }
+         else if (choice < 1 || choice > 10)
+         {
+             printf("Invalid choice! Please enter a number between 1 and 10.\n");
+         }
+ 	}while (choice < 1 || choice > 3);
+ 	return choice;	
+ }
