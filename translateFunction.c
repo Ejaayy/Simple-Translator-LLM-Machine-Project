@@ -70,7 +70,7 @@ void translateWord(entryType entries[], int countEntry, Str20 filteredWord, Str2
         	found = 0;
             for (j = 0; j < entries[matchedIndexes[i]].pairCount && !found; j++) //checks that entry
             {
-                if (strcmp(entries[matchedIndexes[i]].pair[j].lang, outputLanguage) == 0) //checks if the language user wants to output exists
+                if (strcasecmp(entries[matchedIndexes[i]].pair[j].lang, outputLanguage) == 0) //checks if the language user wants to output exists
                 {
                     foundIndex = j; // Store index of the correct pair
                     found = 1;      // Set flag to stop further searching
@@ -101,30 +101,18 @@ void translateTextInput(entryType *entries, int countEntry) {
     do {
         // Ask for source language
         printf("Enter the source language: ");
-        inputWord(sourceLanguage);
+        inputString(sourceLanguage, MAX_LETTER);
         
-        // Get valid input that is at most 150 characters
-        do {
-            validInput = 1; // Assume input is valid
-            printf("Enter the text to be translated (max 150 characters): ");
-            
-            // 
-            fgets(sourceText, MAX_CHARACTERS + 1, stdin);
 
-            // check if input exceeds 150 characters
-            if (strlen(sourceText) > MAX_CHARACTERS) {
-                printf("Error: Text exceeds 150 characters. Please enter a shorter sentence.\n");
-                validInput = 0; // mark input as invalid
-                while (getchar() != '\n'); // clear excess input from buffer
-            }
-        } while (!validInput);
+        printf("Enter the text to be translated (max 150 characters): ");
+        inputString(sourceText, MAX_CHARACTERS);
 
         // remove newline character if present to prevent formatting issues
         sourceText[strcspn(sourceText, "\n")] = '\0';	
         
         // Ask for target language
         printf("Enter the language to translate into: ");
-        inputWord(outputLanguage);
+        inputString(outputLanguage, MAX_LETTER);
         
         // Confirm input details
         printf("\nYou are translating from %s to %s.\n", sourceLanguage, outputLanguage);
@@ -221,16 +209,16 @@ void translateTextFile(entryType *entries, int countEntry) {
     
     // Get file names
     printf("What language is the text file in?: ");
-    inputWord(sourceLanguage);  
+    inputString(sourceLanguage, MAX_LETTER);  
     
     printf("What is the name of the file you are going to translate: ");
-    inputWord(sourceFile);    
+    inputString(sourceFile, MAX_FILENAME);    
     
     printf("What language are you translating it into?: ");
-    inputWord(outputLanguage);    
+    inputString(outputLanguage, MAX_LETTER);    
     
     printf("Where do we output this file: ");
-    inputWord(outputFile);    
+    inputString(outputFile, MAX_FILENAME);    
 
     FILE *ptrSourceFile = fopen(sourceFile, "r");
     FILE *ptrOutputFile = fopen(outputFile, "w");
@@ -281,6 +269,7 @@ void translateTextFile(entryType *entries, int countEntry) {
                     sentenceIndex = 0;
                     lastChar = '\0';
                     skipSentence = 0;  // reset skip flag
+                    spaceFlag = 1;
                 }
             }
 
@@ -289,7 +278,7 @@ void translateTextFile(entryType *entries, int countEntry) {
                 if (lastChar != ',' && lastChar != '.' && lastChar != '?' && lastChar != '!' && lastChar != ' ') { 
                     bufferSentence[sentenceIndex++] = ' ';
                     lastChar = ' ';
-                    spaceFlag = 1;
+                    spaceFlag = 0;
                 }
             }
         }
