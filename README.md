@@ -25,7 +25,7 @@ This project serves as a practical application of fundamental programming concep
 * **Basic Translation Logic:** Developing the core algorithms for looking up and applying translations.
 * **Simulating Real-World Systems:** Providing a simplified model of a dictionary or translation system where users manage their own data.
 
-## Menu Screenshot
+## 👾 Menu Screenshot
 ![Menu Screenshot](translator_pic.png)
 
 ## 📌 Disclaimer
