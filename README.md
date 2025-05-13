@@ -25,10 +25,10 @@ This project serves as a practical application of fundamental programming concep
 * **Basic Translation Logic:** Developing the core algorithms for looking up and applying translations.
 * **Simulating Real-World Systems:** Providing a simplified model of a dictionary or translation system where users manage their own data.
 
-📌 Disclaimer
+## 📌 Disclaimer
 This project was created solely for educational purposes and academic submission. The translation logic depends entirely on a custom dictionary manually created by the user. It does not use external translation APIs or AI models. The output is limited to the exact vocabulary manually input by the user.
 
-🔒 License – Strict Educational Use Only
+ ## 🔒 License – Strict Educational Use Only
 This project is protected under a Strict Educational Use Only license. This means you are allowed to view this code for personal understanding or inspiration only. The following restrictions apply:
 
 🚫 Absolutely NOT Allowed:
