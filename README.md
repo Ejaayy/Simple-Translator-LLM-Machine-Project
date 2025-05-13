@@ -25,34 +25,29 @@ This project serves as a practical application of fundamental programming concep
 * **Basic Translation Logic:** Developing the core algorithms for looking up and applying translations.
 * **Simulating Real-World Systems:** Providing a simplified model of a dictionary or translation system where users manage their own data.
 
-## 📌 Disclaimer
+📌 Disclaimer
+This project was created solely for educational purposes and academic submission. The translation logic depends entirely on a custom dictionary manually created by the user. It does not use external translation APIs or AI models. The output is limited to the exact vocabulary manually input by the user.
 
-**This project was created solely for educational purposes.** The translation accuracy is entirely dependent on the dictionary entries manually created and maintained by the user. It does **not** utilize external translation APIs, machine learning models, or large language models. The translations provided are limited to the vocabulary and translations explicitly entered by the user.
+🔒 License – Strict Educational Use Only
+This project is protected under a Strict Educational Use Only license. This means you are allowed to view this code for personal understanding or inspiration only. The following restrictions apply:
 
-## 📜 License - Restricted Use (Non-Commercial, Attribution Required)
+🚫 Absolutely NOT Allowed:
+❌ No Copy-Paste or Direct Use of any part of the code for your own submissions, projects, or assignments.
 
-This software is provided under a **Non-Commercial, Attribution Required** license. This means you are free to use and modify this code for **personal and educational purposes only**. However, the following restrictions apply:
+❌ No Redistribution of this code, modified or unmodified, in public or private repositories.
 
-* **Non-Commercial Use:** You **may not** use this software or any derivative works for commercial purposes, including but not limited to selling, licensing, or incorporating it into a commercial product or service.
-* **Attribution Required:** When using or distributing modified versions of this code (even for personal/educational use), you **must** clearly and visibly attribute the original author (Edriene James A. Paingan) and this project. This attribution should include a link back to the original source repository (if applicable) and state that the work is a modification of the original.
-* **No Redistribution for Commercial Gain:** You **may not** redistribute this software or modified versions of it for any form of commercial gain.
-* **No Sub-licensing for Commercial Purposes:** You **may not** grant sub-licenses to others for commercial use.
+❌ No Commercial Use — you may not sell, license, or use this code in any way that results in monetary gain.
 
-**In summary, you can learn from and modify this code for your own learning, but you cannot use it to make money or incorporate it into commercial ventures without explicit permission from the original author.**
+❌ No Sub-licensing or Derivatives intended for reuse or sharing.
 
-**A full license text would typically be included in a separate `LICENSE` file. The above is a summary for the `README`.**
+✅ Permitted:
+✅ You may view this project to learn or get ideas.
 
-**Why this license?**
+✅ You may build your own version inspired by it, but do not reuse any part of this code directly.
 
-This type of restrictive license is often used for educational projects where the primary goal is learning and demonstration, rather than open-source collaboration or commercialization. It allows others to benefit from the code for their own learning while protecting the original creator's intent and preventing unauthorized commercial exploitation.
+✅ You must always credit the original author if discussing, referencing, or building upon the ideas here.
 
-**To implement this fully, you would:**
-
-1.  **Create a `LICENSE` file** in the root of your project.
-2.  **Include the full legal text** of a custom Non-Commercial, Attribution Required license within that file. You might need to consult legal resources or adapt existing non-commercial licenses to fit your specific needs.
-3.  **Ensure the `README.md` clearly references the `LICENSE` file** and summarizes the key restrictions as done above.
-4.  **Include a copyright notice** in your code files, typically at the beginning of each file, referencing the license.
-
+Violation of these terms, especially in academic settings, may be considered plagiarism or cheating.
 ```c
 // Copyright (c) 2025 Edriene James A. Paingan
 // This code is licensed under a Non-Commercial, Attribution Required license.
