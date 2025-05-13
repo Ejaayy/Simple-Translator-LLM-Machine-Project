@@ -54,6 +54,6 @@ This type of restrictive license is often used for educational projects where th
 4.  **Include a copyright notice** in your code files, typically at the beginning of each file, referencing the license.
 
 ```c
-// Copyright (c) [Year] Edriene James A. Paingan
+// Copyright (c) 2025 Edriene James A. Paingan
 // This code is licensed under a Non-Commercial, Attribution Required license.
 // See the LICENSE file for details.
