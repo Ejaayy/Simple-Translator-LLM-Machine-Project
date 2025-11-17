@@ -1,6 +1,6 @@
 # Simple Translator - A Command-Line Language Tool (Educational Project)
 
-## 🧠 About the Project
+## About the Project
 
 This Simple Translator is a command-line language translation tool developed in C as an educational project. It provides users with the ability to build, modify, and utilize a personalized dictionary for translating words and phrases across multiple languages.
 
@@ -14,7 +14,7 @@ The core functionality includes:
 * **User-Friendly Interface:** A menu-driven command-line interface for easy interaction with the translator's features.
 * **Basic Translation Logic:** Implements straightforward lookup mechanisms to find and apply translations based on the dictionary.
 
-## 🎯 Purpose
+## Purpose
 
 This project serves as a practical application of fundamental programming concepts in C, including:
 
@@ -25,16 +25,17 @@ This project serves as a practical application of fundamental programming concep
 * **Basic Translation Logic:** Developing the core algorithms for looking up and applying translations.
 * **Simulating Real-World Systems:** Providing a simplified model of a dictionary or translation system where users manage their own data.
 
-## 👾 Menu Screenshot
+## Menu Screenshot
 ![Menu Screenshot](translator_pic.png)
 
-## 📌 Disclaimer
+## Disclaimer
 This project was created solely for educational purposes and academic submission. The translation logic depends entirely on a custom dictionary manually created by the user. It does not use external translation APIs or AI models. The output is limited to the exact vocabulary manually input by the user.
 
- ## 🔒 License – Strict Educational Use Only
+ ## License – Strict Educational Use Only
 This project is protected under a Strict Educational Use Only license. This means you are allowed to view this code for personal understanding or inspiration only. The following restrictions apply:
 
-🚫 Absolutely NOT Allowed:
+Absolutely NOT Allowed:
+
 ❌ No Copy-Paste or Direct Use of any part of the code for your own submissions, projects, or assignments.
 
 ❌ No Redistribution of this code, modified or unmodified, in public or private repositories.
@@ -43,7 +44,8 @@ This project is protected under a Strict Educational Use Only license. This mean
 
 ❌ No Sub-licensing or Derivatives intended for reuse or sharing.
 
-✅ Permitted:
+Permitted:
+
 ✅ You may view this project to learn or get ideas.
 
 ✅ You may build your own version inspired by it, but do not reuse any part of this code directly.
@@ -52,6 +54,7 @@ This project is protected under a Strict Educational Use Only license. This mean
 
 Violation of these terms, especially in academic settings, may be considered plagiarism or cheating.
 ```c
-// Copyright (c) 2025 Edriene James A. Paingan
+// Copyright (c) 2025 Edriene James Paingan
+// Copyright (c) 2025 Marc Andrei Santos
 // This code is licensed under a Non-Commercial, Attribution Required license.
 // See the LICENSE file for details.
