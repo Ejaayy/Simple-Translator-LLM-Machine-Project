@@ -55,6 +55,6 @@ Permitted:
 Violation of these terms, especially in academic settings, may be considered plagiarism or cheating.
 ```c
 // Copyright (c) 2025 Edriene James Paingan
-// Copyright (c) 2025 Marc Andrei Santos
+// Copyright (c) 2025 Marc Andre Santos
 // This code is licensed under a Non-Commercial, Attribution Required license.
 // See the LICENSE file for details.
